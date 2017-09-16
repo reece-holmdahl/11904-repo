@@ -1,0 +1,19 @@
+
+*.gradle
+/FtcRobotController
+/doc
+/build
+/gradle
+/libs
+/.idea
+/.gradle
+/.github
+*.md
+local.properties
+gradlew.bat
+gradlew
+FTC App.iml
+TeamCode/build/
+TeamCode/src/main/res/values/strings.xml
+TeamCode/TeamCode.iml
+TeamCode/src/main/AndroidManifest.xml
