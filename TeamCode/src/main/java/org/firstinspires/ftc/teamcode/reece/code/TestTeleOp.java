@@ -13,7 +13,7 @@ public class TestTeleOp extends HardwareAndMethods {
     }
 
     public void init_loop() {
-        telemetry.addData("Direction", direction);
+        telemetry.addData("Direction", Integer.toString(direction));
         telemetry.update();
         if (gamepad1.a) {
             direction = 1;
