@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.reece.code;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 /**
  * Created by Reece on 09/16/2017.
  */
-
+@TeleOp(name="Test TeleOp", group="TeleOp")
 public class TestTeleOp extends HardwareAndMethods {
 
     int direction = 0;
