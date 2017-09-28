@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Reece on 09/25/2017.
  */
 
-@TeleOp(name="Holonomic TeleOp", group="TeleOp")
+@TeleOp(name = "Holonomic TeleOp", group = "TeleOp")
 public class HolonomicTeleOp extends HardwareAndMethods {
 
     public void init_loop() {
