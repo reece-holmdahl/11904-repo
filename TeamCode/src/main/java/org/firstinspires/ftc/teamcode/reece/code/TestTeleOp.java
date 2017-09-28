@@ -8,35 +8,28 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name="Test TeleOp", group="TeleOp")
 public class TestTeleOp extends HardwareAndMethods {
 
-    int direction = 0;
-
     public void init() {
-        telemetry.addLine("TeleOp Initialized");
+
     }
 
     public void init_loop() {
-        telemetry.addData("Direction", Integer.toString(direction));
-        telemetry.update();
-        if (gamepad1.a) {
-            direction = 1;
-        } if (gamepad1.b) {
-            direction = -1;
-        }
+
     }
 
     public void start() {
-        telemetry.addLine("TeleOp Started");
+        speedCoeff = 0.25f;
     }
 
     public void loop() {
-        lMotor.setPower(gamepad1.left_trigger * direction);
-        rMotor.setPower(gamepad1.right_trigger * direction);
+        telemetry.addData("Heading", Float.toString(heading()));
+        telemetry.addData("Pitch", Float.toString(ori.thirdAngle));
+        telemetry.addData("Roll", Float.toString(ori.secondAngle));
+        telemetry.update();
     }
 
     public void stop() {
         telemetry.addLine("TeleOp Stopped");
-        lMotor.setPower(0);
-        rMotor.setPower(0);
+        speedCoeff = 0;
     }
 
 }
