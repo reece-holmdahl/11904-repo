@@ -15,7 +15,7 @@ public class HolonomicTeleOp extends HardwareAndMethods {
     }
 
     public void start() {
-
+        speedCoeff = 0.25;
     }
 
     public void loop() {
@@ -38,6 +38,6 @@ public class HolonomicTeleOp extends HardwareAndMethods {
     }
 
     public void stop() {
-
+        speedCoeff = 0;
     }
 }

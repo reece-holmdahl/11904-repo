@@ -25,10 +25,31 @@ public class TestTeleOp extends HardwareAndMethods {
         telemetry.addData("Pitch", Float.toString(ori.thirdAngle));
         telemetry.addData("Roll", Float.toString(ori.secondAngle));
         telemetry.update();
+        if (heading() != 0) {
+            speedCoeff = 0.25;
+            if (heading() >= 180) {
+                speedFR = 1;
+                speedBL = 1;
+                speedFL = 0;
+                speedBR = 0;
+            } else if (heading() < 180) {
+                speedFL = 1;
+                speedBR = 1;
+                speedFR = 0;
+                speedBL = 0;
+            }
+        } else if (heading() == 0) {
+            speedCoeff = 0;
+        }
+        motorFL.setPower(speedFL * speedCoeff);
+        motorFR.setPower(speedFR * speedCoeff);
+        motorBL.setPower(speedBL * speedCoeff);
+        motorBR.setPower(speedBR * speedCoeff);
     }
 
     public void stop() {
         telemetry.addLine("TeleOp Stopped");
+        telemetry.addData("")
         speedCoeff = 0;
     }
 
