@@ -50,7 +50,6 @@ public class TestTeleOp extends HardwareAndMethods {
 
     public void stop() {
         telemetry.addLine("TeleOp Stopped");
-        telemetry.addData("")
         speedCoeff = 0;
     }
 
