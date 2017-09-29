@@ -10,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
  * Created by Reece on 09/16/2017.
@@ -17,42 +19,68 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public abstract class HardwareAndMethods extends OpMode {
 
-    //Define motors, sensors, and variables
-    DcMotor motorFL, motorFR, motorBL, motorBR;
-    double speedCoeff, speedAll, speedFL, speedFR, speedBL, speedBR;
-    BNO055IMU gyro;
-    Orientation ori;
-    Acceleration accel;
+    DcMotor frontLeft, backLeft, frontRight, backRight;                                                     //Define motors
+    double speedFL, speedBL, speedFR, speedBR;                                                              //Create variable for independent wheel speeds
+    BNO055IMU imu;                                                                                          //Define IMU
+    Orientation ori;                                                                                        //Register orientation as manipulatable variable
+    Acceleration accel;                                                                                     //Register acceleration as manipulatable variable
 
     public void init() {
-        //Map motors and set direction
-        motorFL = hardwareMap.get(DcMotor.class, "motorFL");
-        motorFR = hardwareMap.get(DcMotor.class, "motorFR");
-        motorBL = hardwareMap.get(DcMotor.class, "motorRL");
-        motorBR = hardwareMap.get(DcMotor.class, "motorRR");
-        motorFL.setDirection(DcMotor.Direction.REVERSE);
-        motorFR.setDirection(DcMotor.Direction.REVERSE);
-        motorBL.setDirection(DcMotor.Direction.REVERSE);
-        motorBR.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft = hardwareMap.get(DcMotor.class, "front left");                                           //Find front left motor in hardware config
+        backLeft = hardwareMap.get(DcMotor.class, "back left");
+        frontRight = hardwareMap.get(DcMotor.class, "front right");
+        backRight = hardwareMap.get(DcMotor.class, "back right");
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);                                                  //Set motor direction of front left motor to forward
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        //Gyro setup
-        gyro = hardwareMap.get(BNO055IMU.class, "rev gyro");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        imu = hardwareMap.get(BNO055IMU.class, "imu");                                                      //Find integrated IMU on hardware config
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();                                       //Set IMU parameters and return value units
         parameters.loggingEnabled = true;
         parameters.loggingTag = "GYRO";
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        gyro.initialize(parameters);
-        ori = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        accel = gyro.getLinearAcceleration();
+        imu.initialize(parameters);                                                                         //Initialize and calibrate gyro
     }
 
-    public float heading() {
+    public void start() {
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);                             //Start thread to find acceleration
+    }
+
+    public void loop() {
+        ori = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);         //Update orientation variable in loop
+        accel = imu.getLinearAcceleration();
+
+        telemetry.addData("Heading", Float.toString(ori.firstAngle));                                       //IMU telemetry for debugging and testing
+        telemetry.addData("Pitch", Float.toString(ori.secondAngle));
+        telemetry.addData("Roll", Float.toString(ori.thirdAngle));
+        telemetry.addData("Acceleration X", Double.toString(accel.xAccel));
+        telemetry.addData("Acceleration Y", Double.toString(accel.yAccel));
+        telemetry.addData("Acceleration Z", Double.toString(accel.zAccel));
+        telemetry.update();
+    }
+
+    public float heading() {                                                                                //Easier access to robot's orientation
         return ori.firstAngle;
     }
 
-    public double acceleration() {
-        return accel.yAccel;
+    public float pitch() {
+        return ori.secondAngle;
+    }
+
+    public float roll() {
+        return ori.thirdAngle;
+    }
+
+    /*
+     * Enter 1 for x acceleration
+     * Enter 2 for y acceleration
+     * Enter 3 for z acceleration
+     */
+    public double acceleration(int axis) {                                                                  //Get any axis of acceleration
+        double[] accelArray = {accel.xAccel, accel.yAccel, accel.zAccel};
+        return accelArray[axis - 1];
     }
 
 }
