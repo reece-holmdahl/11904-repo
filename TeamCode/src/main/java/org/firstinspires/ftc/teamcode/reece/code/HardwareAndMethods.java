@@ -38,7 +38,7 @@ public abstract class HardwareAndMethods extends OpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");                                                      //Find integrated IMU on hardware config
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();                                       //Set IMU parameters and return value units
         parameters.loggingEnabled = true;
-        parameters.loggingTag = "GYRO";
+        parameters.loggingTag = "IMU";
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imu.initialize(parameters);                                                                         //Initialize and calibrate gyro
@@ -52,9 +52,9 @@ public abstract class HardwareAndMethods extends OpMode {
         ori = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);         //Update orientation variable in loop
         accel = imu.getLinearAcceleration();
 
-        telemetry.addData("Heading", Float.toString(ori.firstAngle));                                       //IMU telemetry for debugging and testing
-        telemetry.addData("Pitch", Float.toString(ori.secondAngle));
-        telemetry.addData("Roll", Float.toString(ori.thirdAngle));
+        telemetry.addData("Heading", Float.toString(heading()));                                            //IMU telemetry for debugging and testing
+        telemetry.addData("Pitch", Float.toString(pitch()));
+        telemetry.addData("Roll", Float.toString(roll()));
         telemetry.addData("Acceleration X", Double.toString(accel.xAccel));
         telemetry.addData("Acceleration Y", Double.toString(accel.yAccel));
         telemetry.addData("Acceleration Z", Double.toString(accel.zAccel));
@@ -72,15 +72,4 @@ public abstract class HardwareAndMethods extends OpMode {
     public float roll() {
         return ori.thirdAngle;
     }
-
-    /*
-     * Enter 1 for x acceleration
-     * Enter 2 for y acceleration
-     * Enter 3 for z acceleration
-     */
-    public double acceleration(int axis) {                                                                  //Get any axis of acceleration
-        double[] accelArray = {accel.xAccel, accel.yAccel, accel.zAccel};
-        return accelArray[axis - 1];
-    }
-
 }

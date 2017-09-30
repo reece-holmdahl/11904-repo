@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.reece.code;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  */
 
 @TeleOp(name = "Test Rev IMU", group = "TeleOp")
+@Disabled
 public class TestRevIMU extends OpMode {
 
     DcMotor motor;
@@ -52,7 +54,7 @@ public class TestRevIMU extends OpMode {
         telemetry.addData("Acceleration Y", Double.toString(accel.yAccel));
         telemetry.addData("Acceleration Z", Double.toString(accel.zAccel));
         telemetry.update();
-        if (ori.firstAngle > 30 || ori.firstAngle < -30) {
+        if (ori.firstAngle > 60 || ori.firstAngle < -60) {
             motor.setPower(1);
         } else {
             motor.setPower(0);

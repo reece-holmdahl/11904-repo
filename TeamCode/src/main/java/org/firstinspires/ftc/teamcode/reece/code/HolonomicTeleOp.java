@@ -15,7 +15,6 @@ public class HolonomicTeleOp extends HardwareAndMethods {
     }
 
     public void loop() {
-        //Determine speeds based on joystick
         double unscaledFL = -gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;        //Unscaled front left controller value
         double unscaledBL = -gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
         double unscaledFR = gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
