@@ -20,10 +20,10 @@ public class HolonomicTeleOp extends HardwareAndMethods {
         double unscaledBL = -gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
         double unscaledFR = gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
         double unscaledBR = gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
-        double scaledFL   = scaleDouble(Range.clip(unscaledFL, -1, 1)) * 0.25;                              //Scaled front left controller value
-        double scaledBL   = scaleDouble(Range.clip(unscaledBL, -1, 1)) * 0.25;
-        double scaledFR   = scaleDouble(Range.clip(unscaledFR, -1, 1)) * 0.25;
-        double scaledBR   = scaleDouble(Range.clip(unscaledBR, -1, 1)) * 0.25;
+        double scaledFL   = scaleDouble(Range.clip(unscaledFL, -1, 1)) * 0.6;                              //Scaled front left controller value
+        double scaledBL   = scaleDouble(Range.clip(unscaledBL, -1, 1)) * 0.6;
+        double scaledFR   = scaleDouble(Range.clip(unscaledFR, -1, 1)) * 0.6;
+        double scaledBR   = scaleDouble(Range.clip(unscaledBR, -1, 1)) * 0.6;
         frontLeft.setPower(scaledFL);                                                                       //Set power of front left motor
         backLeft.setPower(scaledBL);
         frontRight.setPower(scaledFR);
@@ -38,13 +38,13 @@ public class HolonomicTeleOp extends HardwareAndMethods {
     }
 
     public double scaleDouble(double input) {
-        double[] scaleArray = {0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35,                              //Array full of scalable values
-                               0.40, 0.50, 0.60, 0.70, 0.75, 0.80, 0.90, 1.00};
+        double[] scaleArray = {0.00, 0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375,                              //Array full of scalable values
+                               0.5, 0.5625, 0.625, 0.6875, 0.75, 0.8125, 0.875, 0.9375, 1.00};
 
         int index = (int) input * 16;                                                                       //Finds index location based on input.
 
         if (index < 0) {                                                                                    //Makes sure value can't exceed index
-            index = -index;
+            index *= -1;
         }
         if (index > 16) {
             index = 16;

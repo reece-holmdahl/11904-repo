@@ -30,10 +30,10 @@ public abstract class HardwareAndMethods extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "back left");
         frontRight = hardwareMap.get(DcMotor.class, "front right");
         backRight = hardwareMap.get(DcMotor.class, "back right");
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);                                                  //Set motor direction of front left motor to forward
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);                                                  //Set motor direction of front left motor to forward
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");                                                      //Find integrated IMU on hardware config
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();                                       //Set IMU parameters and return value units
