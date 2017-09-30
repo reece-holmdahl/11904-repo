@@ -30,7 +30,7 @@ public abstract class HardwareAndMethods extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "back left");
         frontRight = hardwareMap.get(DcMotor.class, "front right");
         backRight = hardwareMap.get(DcMotor.class, "back right");
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);                                                  //Set motor direction of front left motor to forward
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);                                                  //Set motor direction of front left motor to reverse for AndyMark
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
