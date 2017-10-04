@@ -50,8 +50,7 @@ public abstract class HardwareAndMethods extends OpMode {
 
     public void loop() {
         ori = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);         //Update orientation variable in loop
-        accel = imu.getLinearAcceleration();
-
+        accel = imu.getLinearAcceleration();                                                                //Update acceleration variable in loop
         telemetry.addData("Heading", Float.toString(heading()));                                            //IMU telemetry for debugging and testing
         telemetry.addData("Pitch", Float.toString(pitch()));
         telemetry.addData("Roll", Float.toString(roll()));
