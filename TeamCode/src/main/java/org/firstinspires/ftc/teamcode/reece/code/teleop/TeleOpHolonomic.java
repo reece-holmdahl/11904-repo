@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.reece.code.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.reece.code.DefineHardware;
 
@@ -21,18 +22,14 @@ public class TeleOpHolonomic extends DefineHardware {
         double gamepadLeftX = scaleDouble(gamepad1.left_stick_x);
         double gamepadLeftY = -scaleDouble(gamepad1.left_stick_y);
         double gamepadRightX = gamepad1.right_stick_x;
-        double unscaledFL = -gamepadLeftY - gamepadLeftX - gamepadRightX;                                   //Unscaled front left controller value
-        double unscaledBL = -gamepadLeftY + gamepadLeftX - gamepadRightX;
-        double unscaledFR = gamepadLeftY - gamepadLeftX - gamepadRightX;
-        double unscaledBR = gamepadLeftY + gamepadLeftX - gamepadRightX;
-        double scaledFL = unscaledFL * 0.5;                                                                 //Scaled front left controller value
-        double scaledBL = unscaledBL * 0.5;
-        double scaledFR = unscaledFR * 0.5;
-        double scaledBR = unscaledBR * 0.5;
-        frontLeft.setPower(scaledFL);                                                                       //Set power of front left motor
-        backLeft.setPower(scaledBL);
-        frontRight.setPower(scaledFR);
-        backRight.setPower(scaledBR);
+        double powerFL = (-gamepadLeftY - gamepadLeftX) * 0.5 - gamepadRightX * 0.5;                        //Scaled front left motor power value
+        double powerBL = (-gamepadLeftY + gamepadLeftX) * 0.5 - gamepadRightX * 0.5;
+        double powerFR = (gamepadLeftY - gamepadLeftX) * 0.5 - gamepadRightX * 0.5;
+        double powerBR = (gamepadLeftY + gamepadLeftX) * 0.5 - gamepadRightX * 0.5;
+        frontLeft.setPower(Range.clip(powerFL, -1, 1));                                                     //Clip and set power of front left motor
+        backLeft.setPower(Range.clip(powerBL, -1, 1));
+        frontRight.setPower(Range.clip(powerFR, -1, 1));
+        backRight.setPower(Range.clip(powerBR, -1, 1));
     }
 
     public void stop() {
