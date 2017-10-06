@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.reece.code;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -25,6 +24,7 @@ public abstract class DefineHardware extends OpMode {
     public Orientation ori;                                                                                 //Register orientation as manipulatable variable
     public Acceleration accel;                                                                              //Register acceleration as manipulatable variable
 
+    @Override                                                                                               //Override any other initialization methods so this file can map hardware
     public void init() {
         frontLeft = hardwareMap.get(DcMotor.class, "front left");                                           //Find front left motor in hardware config
         backLeft = hardwareMap.get(DcMotor.class, "back left");
@@ -42,6 +42,11 @@ public abstract class DefineHardware extends OpMode {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imu.initialize(parameters);                                                                         //Initialize and calibrate gyro
+    }
+
+    @Override                                                                                               //Override other instances of this method for now to stop motors, more params may be needed in future
+    public void stop() {
+        allMotorPower(0);
     }
 
     public void imuDataCons() {                                                                             //IMU telemetry for debugging and testing

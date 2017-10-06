@@ -14,16 +14,17 @@ public class AutonTest extends AutonMethods {
     }
 
     public void start() {
+        startIMUThread();
         moveDirec(up_right, 3);
         pause(2000);
         faceHeading(180);
     }
 
     public void loop() {
-
+        updateIMUValues();
     }
 
     public void stop() {
-
+        allMotorPower(0);
     }
 }
