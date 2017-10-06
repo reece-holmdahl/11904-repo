@@ -13,23 +13,25 @@ import org.firstinspires.ftc.teamcode.reece.code.DefineHardware;
 //Register op mode in FTC App
 public class TeleOpHolonomic extends DefineHardware {
 
+    double dComp;                                                                                           //Declare variable for drift compensation
+
     public void init_loop() {
 
     }
 
     public void loop() {
         imuDataCons();                                                                                      //IMU telemetry for debugging and testing
-        double gamepadLeftX = scaleDouble(gamepad1.left_stick_x);
+        double gamepadLeftX = scaleDouble(gamepad1.left_stick_x);                                           //Declare left stick as usable variable
         double gamepadLeftY = -scaleDouble(gamepad1.left_stick_y);
         double gamepadRightX = gamepad1.right_stick_x;
         double powerFL = (-gamepadLeftY - gamepadLeftX) * 0.5 - gamepadRightX * 0.5;                        //Scaled front left motor power value
         double powerBL = (-gamepadLeftY + gamepadLeftX) * 0.5 - gamepadRightX * 0.5;
         double powerFR = (gamepadLeftY - gamepadLeftX) * 0.5 - gamepadRightX * 0.5;
         double powerBR = (gamepadLeftY + gamepadLeftX) * 0.5 - gamepadRightX * 0.5;
-        frontLeft.setPower(Range.clip(powerFL, -1, 1));                                                     //Clip and set power of front left motor
-        backLeft.setPower(Range.clip(powerBL, -1, 1));
-        frontRight.setPower(Range.clip(powerFR, -1, 1));
-        backRight.setPower(Range.clip(powerBR, -1, 1));
+        frontLeft.setPower(Range.clip(powerFL, -1, 1) - dComp);                                             //Clip and set power of front left motor
+        backLeft.setPower(Range.clip(powerBL, -1, 1) - dComp);
+        frontRight.setPower(Range.clip(powerFR, -1, 1) - dComp);
+        backRight.setPower(Range.clip(powerBR, -1, 1) - dComp);
     }
 
     public void stop() {
