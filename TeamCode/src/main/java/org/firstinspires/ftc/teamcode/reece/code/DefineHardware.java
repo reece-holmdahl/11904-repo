@@ -44,15 +44,6 @@ public abstract class DefineHardware extends OpMode {
         imu.initialize(parameters);                                                                         //Initialize and calibrate gyro
     }
 
-    public void start() {
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);                              //Start thread to find acceleration
-    }
-
-    public void loop() {
-        ori = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);         //Update orientation variable in loop
-        accel = imu.getLinearAcceleration();                                                                //Update acceleration variable in loop
-    }
-
     public void imuDataCons() {                                                                             //IMU telemetry for debugging and testing
         telemetry.addData("Heading", Float.toString(heading()));
         telemetry.addData("Pitch", Float.toString(pitch()));
@@ -63,13 +54,25 @@ public abstract class DefineHardware extends OpMode {
         telemetry.update();
     }
 
-    public void allMotorPower(double power) {
+    public void allMotorPower(double power) {                                                               //Method to set all motors to desired power
         frontLeft.setPower(power);
         backLeft.setPower(power);
         frontRight.setPower(power);
         backRight.setPower(power);
     }
 
+    public void startIMUThread() {                                                                          //Starts IMU Thread to track acceleration and angular orientation
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
+    }
+
+    public void updateIMUValues() {                                                                         //Put this method in the loop if you are going to use the IMU
+        ori = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+        accel = imu.getLinearAcceleration();
+    }
+
+    /*
+     * The methods below are just ease of access to the angular orientation part of the IMU
+     */
     public float heading() {                                                                                //Easier access to robot's orientation
         return ori.firstAngle;
     }
