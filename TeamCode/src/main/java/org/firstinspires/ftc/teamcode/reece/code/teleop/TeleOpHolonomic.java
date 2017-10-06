@@ -1,21 +1,23 @@
-package org.firstinspires.ftc.teamcode.reece.code;
+package org.firstinspires.ftc.teamcode.reece.code.teleop;
 
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.reece.code.DefineHardware;
 
 /**
  * Created by Reece on 09/25/2017.
  */
 
-@TeleOp(name = "Holonomic Test Op Mode", group = "TeleOp")
+@TeleOp(name = "TeleOpHolonomic", group = "TELEOP")
 //Register op mode in FTC App
-public class HolonomicTeleOp extends HardwareAndMethods {
+public class TeleOpHolonomic extends DefineHardware {
 
     public void init_loop() {
 
     }
 
     public void loop() {
+        imuDataCons();                                                                                      //IMU telemetry for debugging and testing
         double gamepadLeftX = scaleDouble(gamepad1.left_stick_x);
         double gamepadLeftY = -scaleDouble(gamepad1.left_stick_y);
         double gamepadRightX = gamepad1.right_stick_x;
@@ -23,10 +25,10 @@ public class HolonomicTeleOp extends HardwareAndMethods {
         double unscaledBL = -gamepadLeftY + gamepadLeftX - gamepadRightX;
         double unscaledFR = gamepadLeftY - gamepadLeftX - gamepadRightX;
         double unscaledBR = gamepadLeftY + gamepadLeftX - gamepadRightX;
-        double scaledFL = unscaledFL * 0.4;                                                    //Scaled front left controller value
-        double scaledBL = unscaledBL * 0.4;
-        double scaledFR = unscaledFR * 0.4;
-        double scaledBR = unscaledBR * 0.4;
+        double scaledFL = unscaledFL * 0.5;                                                                 //Scaled front left controller value
+        double scaledBL = unscaledBL * 0.5;
+        double scaledFR = unscaledFR * 0.5;
+        double scaledBR = unscaledBR * 0.5;
         frontLeft.setPower(scaledFL);                                                                       //Set power of front left motor
         backLeft.setPower(scaledBL);
         frontRight.setPower(scaledFR);
@@ -34,23 +36,20 @@ public class HolonomicTeleOp extends HardwareAndMethods {
     }
 
     public void stop() {
-        frontLeft.setPower(0);                                                                              //Turn off front left motor ICE
-        backLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        allMotorPower(0);                                                                                   //Turns all motors off
     }
 
     public double scaleDouble(double input) {
-        double[] scaleArray = {0, 0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375,                       //Array full of scalable values
-                0.5, 0.5625, 0.625, 0.6875, 0.75, 0.8125, 0.875, 0.9375, 1.00};
+        double[] scaleArray = {0, 0.50, 0.55, 0.6, 0.65, 0.7, 0.75,                                         //Array full of scalable values
+                                  0.8, 0.85, 0.9, 0.95, 1.00, 1.00};
 
-        int index = (int) (input * 16);                                                                     //Finds index location based on input.
+        int index = (int) (input * 12);                                                                     //Finds index location based on input.
 
         if (index < 0) {                                                                                    //Makes sure value can't exceed index
             index *= -1;
         }
-        if (index > 16) {
-            index = 16;
+        if (index > 12) {
+            index = 12;
         }
 
         double scaledValue;

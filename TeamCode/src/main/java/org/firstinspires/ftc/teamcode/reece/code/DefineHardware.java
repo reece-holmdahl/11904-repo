@@ -17,13 +17,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  * Created by Reece on 09/16/2017.
  */
 
-public abstract class HardwareAndMethods extends OpMode {
+public abstract class DefineHardware extends OpMode {
 
-    DcMotor frontLeft, backLeft, frontRight, backRight;                                                     //Define motors
-    double speedFL, speedBL, speedFR, speedBR;                                                              //Create variable for independent wheel speeds
-    BNO055IMU imu;                                                                                          //Define IMU
-    Orientation ori;                                                                                        //Register orientation as manipulatable variable
-    Acceleration accel;                                                                                     //Register acceleration as manipulatable variable
+    public DcMotor frontLeft, backLeft, frontRight, backRight;                                              //Define motors
+    public double speedFL, speedBL, speedFR, speedBR;                                                       //Create variable for independent wheel speeds
+    public BNO055IMU imu;                                                                                   //Define IMU
+    public Orientation ori;                                                                                 //Register orientation as manipulatable variable
+    public Acceleration accel;                                                                              //Register acceleration as manipulatable variable
 
     public void init() {
         frontLeft = hardwareMap.get(DcMotor.class, "front left");                                           //Find front left motor in hardware config
@@ -45,19 +45,29 @@ public abstract class HardwareAndMethods extends OpMode {
     }
 
     public void start() {
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);                             //Start thread to find acceleration
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);                              //Start thread to find acceleration
     }
 
     public void loop() {
         ori = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);         //Update orientation variable in loop
         accel = imu.getLinearAcceleration();                                                                //Update acceleration variable in loop
-        telemetry.addData("Heading", Float.toString(heading()));                                            //IMU telemetry for debugging and testing
+    }
+
+    public void imuDataCons() {                                                                             //IMU telemetry for debugging and testing
+        telemetry.addData("Heading", Float.toString(heading()));
         telemetry.addData("Pitch", Float.toString(pitch()));
         telemetry.addData("Roll", Float.toString(roll()));
         telemetry.addData("Acceleration X", Double.toString(accel.xAccel));
         telemetry.addData("Acceleration Y", Double.toString(accel.yAccel));
         telemetry.addData("Acceleration Z", Double.toString(accel.zAccel));
         telemetry.update();
+    }
+
+    public void allMotorPower(double power) {
+        frontLeft.setPower(power);
+        backLeft.setPower(power);
+        frontRight.setPower(power);
+        backRight.setPower(power);
     }
 
     public float heading() {                                                                                //Easier access to robot's orientation
