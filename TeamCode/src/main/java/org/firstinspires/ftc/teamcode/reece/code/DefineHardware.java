@@ -50,9 +50,9 @@ public abstract class DefineHardware extends OpMode {
     }
 
     public void imuDataCons() {                                                                             //IMU telemetry for debugging and testing
-        telemetry.addData("Heading", Float.toString(heading()));
-        telemetry.addData("Pitch", Float.toString(pitch()));
-        telemetry.addData("Roll", Float.toString(roll()));
+        telemetry.addData("Heading", Double.toString(heading()));
+        telemetry.addData("Pitch", Double.toString(pitch()));
+        telemetry.addData("Roll", Double.toString(roll()));
         telemetry.addData("Acceleration X", Double.toString(accel.xAccel));
         telemetry.addData("Acceleration Y", Double.toString(accel.yAccel));
         telemetry.addData("Acceleration Z", Double.toString(accel.zAccel));
@@ -67,7 +67,7 @@ public abstract class DefineHardware extends OpMode {
     }
 
     public void startIMUThread() {                                                                          //Starts IMU Thread to track acceleration and angular orientation
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
     public void updateIMUValues() {                                                                         //Put this method in the loop if you are going to use the IMU
@@ -78,15 +78,15 @@ public abstract class DefineHardware extends OpMode {
     /*
      * The methods below are just ease of access to the angular orientation part of the IMU
      */
-    public float heading() {                                                                                //Easier access to robot's orientation
+    public double heading() {                                                                                //Easier access to robot's orientation
         return ori.firstAngle;
     }
 
-    public float pitch() {
+    public double pitch() {
         return ori.secondAngle;
     }
 
-    public float roll() {
+    public double roll() {
         return ori.thirdAngle;
     }
 }
