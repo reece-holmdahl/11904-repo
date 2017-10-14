@@ -13,6 +13,7 @@ local.properties
 gradlew.bat
 gradlew
 FTC App.iml
+ftc_app-master.iml
 TeamCode/build/
 TeamCode/src/main/res/values/strings.xml
 TeamCode/TeamCode.iml
