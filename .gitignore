@@ -13,8 +13,12 @@ local.properties
 gradlew.bat
 gradlew
 FTC App.iml
-ftc_app-master.iml
+11904-repo.iml
 TeamCode/build/
 TeamCode/src/main/res/values/strings.xml
 TeamCode/TeamCode.iml
 TeamCode/src/main/AndroidManifest.xml
+TeamCode/src/main/gen/org/firstinspires/ftc/teamcode/Manifest.java
+TeamCode/src/main/gen/org/firstinspires/ftc/teamcode/BuildConfig.java
+TeamCode/src/main/gen/org/firstinspires/ftc/teamcode/R.java
+*.iml
