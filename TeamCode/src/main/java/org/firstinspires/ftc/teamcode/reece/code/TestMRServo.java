@@ -21,10 +21,10 @@ public class TestMRServo extends OpMode {
 
     public void loop() {
         double jStick = (gamepad1.left_stick_x * 0.005);
-        if (sPos <= 1 && sPos >= 0) {
+        if (sPos <= 0.7 && sPos >= 0) {
             sPos += jStick;
-        } else if (sPos > 1) {
-            sPos = 1;
+        } else if (sPos > 0.7) {
+            sPos = 0.7;
         } else if (sPos < 0) {
             sPos = 0;
         }
