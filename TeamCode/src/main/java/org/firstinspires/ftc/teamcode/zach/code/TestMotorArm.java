@@ -19,15 +19,16 @@ public class TestMotorArm extends OpMode {
     }
 
     public void loop() {
-        double defaultPower = 0.05
-        double jStick = gamepad1.right_stick_y;
+        double defaultPower = 0;
+        double jStick = gamepad1.right_stick_y * -1;
         if (jStick >= 0)
         {
             jStick = jStick * 0.35;
         }
         else
         {
-            jStick = jStick * defaultPower;
+            jStick = jStick * 0.05;
+            //defaultPower = 0.05;
         }
         armMotor.setPower(defaultPower + jStick);
         telemetry.addData("Joystick Value", Double.toString(jStick * 500));
