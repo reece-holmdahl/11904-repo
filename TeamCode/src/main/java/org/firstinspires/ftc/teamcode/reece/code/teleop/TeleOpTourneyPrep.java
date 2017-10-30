@@ -21,10 +21,17 @@ public class TeleOpTourneyPrep extends DefineHardware {
 
     @Override
     public void loop() {
+        //Drive train motor code
         frontLeft.setPower(holoCode(0));                                                                    //Set all motors to their speed based on holonomic formula method and motor pos
         backLeft.setPower(holoCode(1));
         frontRight.setPower(holoCode(2));
         backRight.setPower(holoCode(3));
+
+        //Glyph manipulator motor and servo code
+        if (armMovable) {
+            lowerArm.setPower(Range.clip(manipLeftY() + forceMod(), -1, 1));
+            upperArm.setPower(-lowerArm.getPower());
+        }
     }
 
     private double scaleDouble(double input, boolean precise) {
@@ -73,7 +80,7 @@ public class TeleOpTourneyPrep extends DefineHardware {
     }
 
     private double forceMod() {                                                                             //Force modification method for adaptive adding to or subtracting from power of arm speed
-        
+        //Left blank for now because there hasn't been any testing for what power adjustments are needed
         return 0;
     }
 
