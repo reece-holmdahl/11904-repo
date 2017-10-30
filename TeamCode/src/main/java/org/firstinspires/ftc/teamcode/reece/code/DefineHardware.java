@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.reece.code;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,8 +19,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 public abstract class DefineHardware extends OpMode {
 
-    public DcMotor frontLeft, backLeft, frontRight, backRight;                                              //Define motors
-    public double speedFL, speedBL, speedFR, speedBR;                                                       //Create variable for independent wheel speeds
+    public DcMotor frontLeft, backLeft, frontRight, backRight;                                              //Define Drive Train motors
+    public DcMotor armLower, armUpper;                                                                      //Define Glyph Manipulator motors
+    public DcMotor linearSlide;                                                                             //Define motor for Relic Manipulator
+    public Servo clawLeft, clawRight;                                                                       //Define servo devices for Glyph Manipulator
+    public Servo relicClaw;                                                                                 //Define servos for Relic Manipualtor
+    public double powerFL, powerBL, powerFR, powerBR;                                                       //Create variable for independent wheel speeds
     public BNO055IMU imu;                                                                                   //Define IMU
     public Orientation ori;                                                                                 //Register orientation as manipulatable variable
     public Acceleration accel;                                                                              //Register acceleration as manipulatable variable
@@ -34,6 +39,11 @@ public abstract class DefineHardware extends OpMode {
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        armLower = hardwareMap.get(DcMotor.class, "arm lower");                                             //Find arm lower motor on hardware map
+        armUpper = hardwareMap.get(DcMotor.class, "arm upper");
+
+        //linearSlide = hardwareMap.get(DcMotor.class, "linear slide");                                       //Find linear slide motor in hardware map
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");                                                      //Find integrated IMU on hardware config
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();                                       //Set IMU parameters and return value units
