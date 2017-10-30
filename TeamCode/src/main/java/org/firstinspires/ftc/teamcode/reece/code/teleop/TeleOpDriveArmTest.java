@@ -20,17 +20,13 @@ public class TeleOpDriveArmTest extends DefineHardware {
 
     public void loop() {
         holoDriveLoop();                                                                                    //Loop holonomic formula for driving
-        frontLeft.setPower(Range.clip(powerFL - dComp, -1, 1));                                             //Clip and set power of front left motor
+        /*frontLeft.setPower(Range.clip(powerFL - dComp, -1, 1));                                             //Clip and set power of front left motor
         backLeft.setPower(Range.clip(powerBL - dComp, -1, 1));
         frontRight.setPower(Range.clip(powerFR - dComp, -1, 1));
-        backRight.setPower(Range.clip(powerBR - dComp, -1, 1));
+        backRight.setPower(Range.clip(powerBR - dComp, -1, 1));*/
 
-        armLower.setPower(Range.clip(gamepad2.left_stick_y - gamepad2.left_stick_y * 0.05, -1, 1));
-        armUpper.setPower(Range.clip(-gamepad2.left_stick_y + gamepad2.left_stick_y * 0.05, -1, 1));
-    }
-
-    public void stop() {
-        allMotorPower(0);
+        lowerArm.setPower(Range.clip(gamepad2.left_stick_y - gamepad2.left_stick_y * 0.05, -1, 1));
+        upperArm.setPower(Range.clip(-gamepad2.left_stick_y + gamepad2.left_stick_y * 0.05, -1, 1));
     }
 
     public double scaleDouble(double input) {
@@ -59,9 +55,9 @@ public class TeleOpDriveArmTest extends DefineHardware {
         double gamepadLeftX = scaleDouble(gamepad1.left_stick_x);                                           //Declare left stick as usable variable
         double gamepadLeftY = -scaleDouble(gamepad1.left_stick_y);
         double gamepadRightX = gamepad1.right_stick_x;
-        powerFL = (-gamepadLeftY - gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;            //Scaled front left motor power value
+        /*powerFL = (-gamepadLeftY - gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;            //Scaled front left motor power value
         powerBL = (-gamepadLeftY + gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;
         powerFR = (gamepadLeftY - gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;
-        powerBR = (gamepadLeftY + gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;
+        powerBR = (gamepadLeftY + gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;*/
     }
 }

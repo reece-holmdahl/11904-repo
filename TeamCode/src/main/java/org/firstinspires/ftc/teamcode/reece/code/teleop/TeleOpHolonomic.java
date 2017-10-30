@@ -35,10 +35,6 @@ public class TeleOpHolonomic extends DefineHardware {
         backRight.setPower(Range.clip(powerBR - dComp, -1, 1));
     }
 
-    public void stop() {
-        allMotorPower(0);                                                                                   //Turns all motors off
-    }
-
     public double scaleDouble(double input) {
         double[] scaleArray = {0, 0.50, 0.55, 0.6, 0.65, 0.7, 0.75,                                         //Array full of scalable values
                                   0.8, 0.85, 0.9, 0.95, 1.00, 1.00};

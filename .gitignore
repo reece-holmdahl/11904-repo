@@ -1,24 +1,47 @@
+# built application files
+*.apk
+*.ap_
 
-*.gradle
-/FtcRobotController
-/doc
-/build
-/gradle
-/libs
-/.idea
-/.gradle
-/.github
-*.md
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
 local.properties
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Android Studio
+*.iml
+.idea
+.gradle
+build/
+
+*ASUS_PC_01*
+
+*.xml
+*.gradle
+*.md
+*.aar
+*.jar
+*.txt
+libs/ftc.debug.keystore
+libs/armeabi-v7a/libVuforia.so
 gradlew.bat
 gradlew
-FTC App.iml
-11904-repo.iml
-TeamCode/build/
-TeamCode/src/main/res/values/strings.xml
-TeamCode/TeamCode.iml
-TeamCode/src/main/AndroidManifest.xml
-TeamCode/src/main/gen/org/firstinspires/ftc/teamcode/Manifest.java
-TeamCode/src/main/gen/org/firstinspires/ftc/teamcode/BuildConfig.java
-TeamCode/src/main/gen/org/firstinspires/ftc/teamcode/R.java
-*.iml
+*.properties
+*.png
+/FtcRobotController
+*.pdf
+*.jpg
+*.css
+*.html
+*.js
+doc/javadoc/package-list
