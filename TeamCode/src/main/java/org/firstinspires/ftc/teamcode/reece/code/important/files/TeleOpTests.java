@@ -46,6 +46,9 @@ public class TeleOpTests extends OpMode {
     Servo clamp;
     HardwareDevice[] relic = {slide, clamp};
 
+    //Sub-team related definitions
+    DcMotor[] driveMotors = (DcMotor[]) Arrays.copyOfRange(drive, 0, 3);
+
     /**
      * In the init (initialization) method objects are defined and mapped on the hardware in
      * segments based on subteams. The purpose of this is for a cleaner code and superior
@@ -55,7 +58,7 @@ public class TeleOpTests extends OpMode {
     public void init() {
         //Initialize and set adjust drive train devices
         hwMap(drive);
-        motorDirec((DcMotor[]) Arrays.copyOfRange(drive, 0, 3), DcMotor.Direction.FORWARD);                 //Sets the direction of all the drive motors to forward
+        motorDirec(driveMotors, DcMotor.Direction.FORWARD);                                                 //Sets the direction of all the drive motors to forward
 
         //Initialize and adjust glyph manipulator devices
         hwMap(glyph);
@@ -77,6 +80,13 @@ public class TeleOpTests extends OpMode {
         backLeft.setPower(driveCode(back, left));
         frontRight.setPower(driveCode(front, right));
         backRight.setPower(driveCode(back, right));
+
+        //Brake drive train motors when no power is being applied
+        if (driveLeftX() + driveLeftY() == 0) {
+            motorBehav(driveMotors, DcMotor.ZeroPowerBehavior.BRAKE);
+        } else {
+            motorBehav(driveMotors, DcMotor.ZeroPowerBehavior.FLOAT);
+        }
     }
 
     /**
@@ -139,6 +149,23 @@ public class TeleOpTests extends OpMode {
         int amount = motors.length;
         while (i < amount) {
             motors[i].setDirection(direction);
+            i++;
+        }
+    }
+
+    /**
+     * Another array based motor behavior modifier. This one sets the zero power behavior so it can
+     * either move or stand still while there is no force being applied.
+     *
+     * @param motors   The array of motors you want to have this behavior applied to
+     * @param behavior The behavior you want to apply
+     */
+
+    private void motorBehav(DcMotor[] motors, DcMotor.ZeroPowerBehavior behavior) {
+        int i = 0;
+        int amount = motors.length;
+        while (i < amount) {
+            motors[i].setZeroPowerBehavior(behavior);
             i++;
         }
     }
