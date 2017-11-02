@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.reece.code.important.files;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Arrays;
 
@@ -27,29 +34,41 @@ public class TeleOpTests extends OpMode {
     int right = -1;
     int front = 1;
     int back = -1;
+    int heading = 0;
+    int pitch = 1;
+    int roll = 2;
+    int timestamp = 3;
 
-    //Drive related variables for speed control
+    //Drive train related variables for speed control
     double speed = 0.6;
     double turn = 0.3;
 
     //Drive train objects
     DcMotor frontLeft, backLeft, frontRight, backRight;
     Servo jewel;
-    HardwareDevice[] drive = {frontLeft, backLeft, frontRight, backRight, jewel};
+    BNO055IMU imu;
+    Object[] drive = {frontLeft, backLeft, frontRight, backRight, jewel, imu};
 
     //Glyph manipulator objects
     DcMotor armBot, armTop;
     Servo clawLeft, clawRight;
-    HardwareDevice[] glyph = {armBot, armTop, clawLeft, clawRight};
+    Object[] glyph = {armBot, armTop, clawLeft, clawRight};
 
     //Relic manipulator objects
     DcMotor slide;
     Servo clamp;
-    HardwareDevice[] relic = {slide, clamp};
+    Object[] relic = {slide, clamp};
 
-    //Sub-team related definitions
+    //Sub-team related objects
     DcMotor[] driveMotors = (DcMotor[]) Arrays.copyOfRange(drive, 0, 4);
     DcMotor[] armMotors = (DcMotor[]) Arrays.copyOfRange(glyph, 0, 2);
+
+    //IMU objects
+    Orientation ori;
+
+    //IMU variables
+    double[] angles = {ori.firstAngle, ori.secondAngle, ori.thirdAngle, ori.acquisitionTime};               //Index 0 is heading, 1 is pitch, 2 is roll, 3 is timestamp
+    double normal = 5.0;
 
     /**
      * In the init (initialization) method objects are defined and mapped on the hardware in
@@ -80,11 +99,26 @@ public class TeleOpTests extends OpMode {
 
     @Override
     public void loop() {
-        //Drive train motor loop code
-        frontLeft.setPower(driveCode(front, left));                                                         //Set drive motors to their speed based on holonomic drive formula and position on the robot
-        backLeft.setPower(driveCode(back, left));
-        frontRight.setPower(driveCode(front, right));
-        backRight.setPower(driveCode(back, right));
+        //Update IMU values
+        ori = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+
+        //Boolean to see if currently using balancing stone climber functionality
+        boolean climbing = gamepad1.a;
+
+        //Drive train motor loop code if not using balancing stone climber
+        //if (!climbing) {
+            frontLeft.setPower(driveCode(front, left));                                                     //Set drive motors to their speed based on holonomic drive formula and position on the robot
+            backLeft.setPower(driveCode(back, left));
+            frontRight.setPower(driveCode(front, right));
+            backRight.setPower(driveCode(back, right));
+        /*} else {
+            if (Math.abs(angles[pitch]) <= normal) {
+                frontLeft.setPower(0.3);
+                backLeft.setPower(0.3);
+                frontRight.setPower(-0.3);
+                backRight.setPower(-0.3);
+            }
+        }*/
 
         //Brake drive train motors when no power is being applied
         if (driveLeftX() + driveLeftY() == 0) {
