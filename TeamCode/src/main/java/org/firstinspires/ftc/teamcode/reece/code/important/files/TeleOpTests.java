@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.reece.code.important.files;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -47,7 +48,8 @@ public class TeleOpTests extends OpMode {
     HardwareDevice[] relic = {slide, clamp};
 
     //Sub-team related definitions
-    DcMotor[] driveMotors = (DcMotor[]) Arrays.copyOfRange(drive, 0, 3);
+    DcMotor[] driveMotors = (DcMotor[]) Arrays.copyOfRange(drive, 0, 4);
+    DcMotor[] armMotors = (DcMotor[]) Arrays.copyOfRange(glyph, 0, 2);
 
     /**
      * In the init (initialization) method objects are defined and mapped on the hardware in
@@ -63,9 +65,12 @@ public class TeleOpTests extends OpMode {
         //Initialize and adjust glyph manipulator devices
         hwMap(glyph);
         armBot.setDirection(DcMotor.Direction.REVERSE);                                                     //Sets the direction of the bottom arm motor to reverse because it is upside down
+        motorBehav(armMotors, DcMotor.ZeroPowerBehavior.BRAKE);                                             //Sets the arm motors to brake when not powered
 
         //Initialize and adjust relic manipulator devices
         hwMap(relic);
+        slide.setDirection(DcMotorSimple.Direction.FORWARD);                                                //Sets the linear slide motor to move forward
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);                                        //Sets the linear slide motor to brake when not powered
     }
 
     /**
@@ -90,6 +95,17 @@ public class TeleOpTests extends OpMode {
     }
 
     /**
+     * The stop method is important but not necessary. In this class I use it to stop all of the
+     * motors just incase the is stopped accidentally or via crash and the motors go haywire.
+     */
+
+    public void stop() {
+        motorPower(driveMotors, 0);
+        motorPower(armMotors, 0);
+        slide.setPower(0);
+    }
+
+    /**
      * This method has changed a lot recently. Basically what it does is it rounds the input of the
      * double to the nearest tenth.
      *
@@ -102,6 +118,24 @@ public class TeleOpTests extends OpMode {
         double multiplier = 1 / roundTo;                                                                    //Finds the number that it has to be multiplied by to round
         double rounded = ((int) (input * multiplier)) / multiplier;                                         //Multiplies input by multiplier, casts it to an int (rounds it), then divides by the multiplier
         return Range.clip(rounded, -1, 1);                                                                  //Clips the input so it doesn't exceed 1.0 or go under -1.0
+    }
+
+    /**
+     * The motor power method sets an array of motors to the power specified. It is a very basic
+     * method. In case power exceeds 1 or is less than -1 it will clip the values to make sure the
+     * program doesn't crash through a small programming mistake.
+     *
+     * @param motors The selected array of motors you are powering
+     * @param power  The desired power to set all of the motors
+     */
+
+    private void motorPower(DcMotor[] motors, double power) {
+        int i = 0;
+        int amount = motors.length;
+        while (i < amount) {
+            motors[i].setPower(Range.clip(power, -1, 1));
+            i++;
+        }
     }
 
     /**
@@ -146,9 +180,9 @@ public class TeleOpTests extends OpMode {
 
     private void motorDirec(DcMotor[] motors, DcMotor.Direction direction) {                                //Set direction of all motors in an array for efficiency
         int i = 0;
-        int amount = motors.length;
+        int amount = motors.length;                                                                         //Find length of array inputed
         while (i < amount) {
-            motors[i].setDirection(direction);
+            motors[i].setDirection(direction);                                                              //Set each motors direction
             i++;
         }
     }
