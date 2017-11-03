@@ -1,5 +1,7 @@
 /*
 /*/
-!/TeamCode/src/
+/TeamCode/build/
+!/TeamCode/
 *.gradle
 *.xml
+*.iml
