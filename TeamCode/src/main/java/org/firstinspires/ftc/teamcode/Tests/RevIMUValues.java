@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.reece.code;
+package org.firstinspires.ftc.teamcode.Tests;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -20,7 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 @TeleOp(name = "Test Rev IMU", group = "TeleOp")
 @Disabled
-public class TestRevIMU extends OpMode {
+public class RevIMUValues extends OpMode {
 
     DcMotor motor;
     BNO055IMU imu;

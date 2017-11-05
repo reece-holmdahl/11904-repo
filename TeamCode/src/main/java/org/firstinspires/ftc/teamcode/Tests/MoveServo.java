@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.reece.code;
+package org.firstinspires.ftc.teamcode.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "TestMRServo", group = "TELEOP")
 @Disabled
-public class TestMRServo extends OpMode {
+public class MoveServo extends OpMode {
 
     Servo servo;
     double sPos;

@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.reece.code.teleop;
+package org.firstinspires.ftc.teamcode.TeleOp.concepts;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.reece.code.DefineHardware;
+import org.firstinspires.ftc.teamcode.DefineHardware;
 
 /**
  * Created by Reece on 10/30/2017.
  */
 
-public class TeleOpTourneyPrep extends DefineHardware {
+@TeleOp(name = "HolonomicChanges")
+public class HolonomicChanges extends DefineHardware {
 
     double speedMod = 0.6;                                                                                  //Variable for quick manipulation of speed
     double turnMod = 0.3;                                                                                   //Same as before but for turning

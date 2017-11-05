@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.reece.code.teleop;
+package org.firstinspires.ftc.teamcode.TeleOp.concepts;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -16,8 +16,8 @@ import java.util.HashMap;
  * Created by Reece on 11/02/2017.
  */
 
-@TeleOp(name = "Test New Design TeleOp", group = "11904")
-public class TeleOpNewDesign extends OpMode {
+@TeleOp(name = "BulkArrayMapping")
+public class BulkArrayMapping extends OpMode {
 
     //Assigning variables to meaningful names for methods
     private int front = 1;

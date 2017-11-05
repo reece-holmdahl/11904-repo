@@ -1,21 +1,26 @@
-package org.firstinspires.ftc.teamcode.reece.code.auton;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.reece.code.DefineHardware;
 
-import static java.lang.Math.abs;
+import org.firstinspires.ftc.teamcode.DefineHardware;
 
 /**
  * Created by Reece on 10/05/2017.
  */
 
-public abstract class AutonMethods extends DefineHardware {
+public abstract class Methods extends DefineHardware {
 
     ElapsedTime mTime = new ElapsedTime();                                                                  //Time counter for use in methods
     ElapsedTime rTime = new ElapsedTime();                                                                  //Master clock that counts time in autonomous
 
-    int up = 0; int up_left = 1; int left = 2; int down_left = 3;                                           //Improper format of declaring variables but it saves space
-    int down = 4; int down_right = 5; int right = 6; int up_right = 7;                                      //Said variables are for easier usage in moveDirec method
+    int up = 0;
+    int up_left = 1;
+    int left = 2;
+    int down_left = 3;                                           //Improper format of declaring variables but it saves space
+    int down = 4;
+    int down_right = 5;
+    int right = 6;
+    int up_right = 7;                                      //Said variables are for easier usage in moveDirec method
 
     /*
      * Parameters for this method are
@@ -70,10 +75,11 @@ public abstract class AutonMethods extends DefineHardware {
                 allMotorPower(-0.2);
             }
         } else if (turnAmount < 0) {
-            while(heading() - 0.5 > startHeading + turnAmount) {
+            while (heading() - 0.5 > startHeading + turnAmount) {
                 allMotorPower(0.2);
             }
-        } else {}
+        } else {
+        }
         allMotorPower(0);                                                                                   //Turns all motors off
     }
 

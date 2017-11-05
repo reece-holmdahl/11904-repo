@@ -1,19 +1,17 @@
-package org.firstinspires.ftc.teamcode.reece.code.teleop;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.reece.code.DefineHardware;
+import org.firstinspires.ftc.teamcode.DefineHardware;
 
 /**
  * Created by Reece on 09/25/2017.
  */
 
-@TeleOp(name = "TeleOpHolonomic", group = "TELEOP")
-//Register op mode in FTC App
-public class TeleOpHolonomic extends DefineHardware {
+@TeleOp(name = "TestHolonomic")
+public class TestHolonomic extends DefineHardware {
 
-    double dComp;                                                                                           //Declare variable for drift compensation
     double speedModifier = 0.45;                                                                            //Easy variable for modifying speed percentage
     double turnModifier = 0.35;                                                                             //Easy variable for modifying turning speed percentage
 
@@ -29,15 +27,15 @@ public class TeleOpHolonomic extends DefineHardware {
         double powerBL = (-gamepadLeftY + gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;
         double powerFR = (gamepadLeftY - gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;
         double powerBR = (gamepadLeftY + gamepadLeftX) * speedModifier - gamepadRightX * turnModifier;
-        frontLeft.setPower(Range.clip(powerFL - dComp, -1, 1));                                             //Clip and set power of front left motor
-        backLeft.setPower(Range.clip(powerBL - dComp, -1, 1));
-        frontRight.setPower(Range.clip(powerFR - dComp, -1, 1));
-        backRight.setPower(Range.clip(powerBR - dComp, -1, 1));
+        frontLeft.setPower(Range.clip(powerFL, -1, 1));                                                     //Clip and set power of front left motor
+        backLeft.setPower(Range.clip(powerBL, -1, 1));
+        frontRight.setPower(Range.clip(powerFR, -1, 1));
+        backRight.setPower(Range.clip(powerBR, -1, 1));
     }
 
     public double scaleDouble(double input) {
         double[] scaleArray = {0, 0.50, 0.55, 0.6, 0.65, 0.7, 0.75,                                         //Array full of scalable values
-                                  0.8, 0.85, 0.9, 0.95, 1.00, 1.00};
+                0.8, 0.85, 0.9, 0.95, 1.00, 1.00};
 
         int index = (int) (input * 12);                                                                     //Finds index location based on input.
 

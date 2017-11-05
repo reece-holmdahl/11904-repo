@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.reece.code.teleop;
+package org.firstinspires.ftc.teamcode.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 @TeleOp(name = "TestArmMove", group = "11904")
-public class TestArmMove extends OpMode {
+public class MoveArm extends OpMode {
 
     DcMotor motor;
     double powerVar = 0.0;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.reece.code.important.files;
+package org.firstinspires.ftc.teamcode.TeleOp.concepts;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -26,8 +26,8 @@ import java.util.Arrays;
  * Created by Reece on 11/01/17.
  */
 
-@TeleOp(name = "New TeleOp Test", group = "EXP")
-public class TeleOpTests extends OpMode {
+@TeleOp(name = "BulkArrayMappingTests")
+public class BulkArrayMappingTests extends OpMode {
 
     //Variables with names for cleaner code
     int left = 1;
@@ -72,8 +72,8 @@ public class TeleOpTests extends OpMode {
 
     /**
      * In the init (initialization) method objects are defined and mapped on the hardware in
-     * segments based on subteams. The purpose of this is for a cleaner code and superior
-     * organization. Your welcome people of github.
+     * segments based on sub-teams. The purpose of this is for a cleaner code and superior
+     * organization.
      */
 
     public void init() {

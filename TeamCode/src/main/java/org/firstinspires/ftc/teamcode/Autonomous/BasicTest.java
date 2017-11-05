@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.reece.code.auton;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Created by Reece on 10/05/2017.
  */
 
-@Autonomous(name = "AutonTest", group = "AUTON")
-public class AutonTest extends AutonMethods {
+@Autonomous(name = "BasicTest")
+public class BasicTest extends Methods {
 
     public void init_loop() {
 
