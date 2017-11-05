@@ -21,14 +21,14 @@ import org.firstinspires.ftc.teamcode.DefineHardware;
 public class FinalHolonomic extends DefineHardware {
 
     //Speed control coefficients
-    private double speed    = 0.6;
-    private double turn     = 0.3;
+    private double speed    = 0.4;
+    private double turn     = 0.2;
 
     //Variable names used for cleaner code
     private int front   = 1;
-    private int left    = 1;
+    private int left    = -1;
     private int back    = -1;
-    private int right   = -1;
+    private int right   = 1;
 
     /**
      * The loop method is looped when the robot controller is in the start phase. It is used for the
@@ -56,7 +56,7 @@ public class FinalHolonomic extends DefineHardware {
         }
 
         //Keep jewel servo upright so it doesn't get broken off
-        jewel.setPosition(0);
+        jewel.setPosition(1.0);
     }
 
     /**
@@ -69,7 +69,7 @@ public class FinalHolonomic extends DefineHardware {
      */
 
     private double driveCode(int side, int end) {
-        double move = end * driverLeftX() + side * driverLeftY();
+        double move = side * driverLeftX() + end * driverLeftY();
         double turn = driverRightX();
         return Range.clip(move * speed + turn * this.turn, -1, 1);
     }
@@ -88,14 +88,14 @@ public class FinalHolonomic extends DefineHardware {
     }
 
     private double driverLeftX() {
-        return round(driver.left_stick_x, 0.1);
+        return round(gamepad1.left_stick_x, 0.1);
     }
 
     private double driverLeftY() {
-        return round(driver.left_stick_y, 0.1);
+        return round(gamepad1.left_stick_y, 0.1);
     }
 
     private double driverRightX() {
-        return round(driver.right_stick_x, 0.1);
+        return round(gamepad1.right_stick_x, 0.1);
     }
 }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -11,13 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 public abstract class DefineHardware extends OpMode {
-
-    //Link HardwareMap object
-    private HardwareMap hwMap   = null;
-
-    //Rename gamepads for easier use
-    public Gamepad driver      = gamepad1;
-    public Gamepad manipulator = gamepad2;
 
     //Define drive train objects
     public DcMotor frontLeft   = null;
@@ -42,20 +36,21 @@ public abstract class DefineHardware extends OpMode {
     @Override
     public void init() {
         //Hardware map drive train objects
-        frontLeft   = hwMap.get(DcMotor.class,  "front left");
-        backLeft    = hwMap.get(DcMotor.class,  "back left");
-        frontRight  = hwMap.get(DcMotor.class,  "front right");
-        backRight   = hwMap.get(DcMotor.class,  "back right");
-        jewel       = hwMap.get(Servo.class,    "jewel");
+        frontLeft   = hardwareMap.get(DcMotor.class,  "front left");
+        backLeft    = hardwareMap.get(DcMotor.class,  "back left");
+        frontRight  = hardwareMap.get(DcMotor.class,  "front right");
+        backRight   = hardwareMap.get(DcMotor.class,  "back right");
+        jewel       = hardwareMap.get(Servo.class,    "jewel");
 
         //Hardware map relic manipulator objects
-        //slide   = hwMap.get(DcMotor.class,  "slide");
-        //gripper = hwMap.get(Servo.class,    "gripper");
+        //slide   = hardwareMap.get(DcMotor.class,  "slide");
+        //gripper = hardwareMap.get(Servo.class,    "gripper");
 
-        for (int i = 0; i < drive.length; i++) {
-            drive[i].setDirection(DcMotor.Direction.FORWARD);
-            //drive[i] = hwMap.get(DcMotor.class, drive[i].toString().toLowerCase());                         //Potential way to map an array of DcMotors
-        }
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+        //slide.setDirection(DcMotor.Direction.FORWARD);
     }
 
     /**
@@ -65,8 +60,10 @@ public abstract class DefineHardware extends OpMode {
 
     @Override
     public void stop() {
-        for (int i = 0; i < motors.length; i++) {
-            motors[i].setPower(0);
-        }
+        frontLeft.setPower(0);
+        backLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        //slide.setPower(0);
     }
 }
