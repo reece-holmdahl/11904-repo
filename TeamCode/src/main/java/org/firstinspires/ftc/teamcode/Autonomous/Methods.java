@@ -27,7 +27,7 @@ public abstract class Methods extends DefineHardware {
      * Option: Check beside the array to see options, use name or int. Either will work.
      * Time: Amount of time method runs for.
      */
-    public void moveDirec(int option, double time) {                                                        //Method to move our robot in 8 axis of movement and compensate for any drift
+    /*public void moveDirec(int option, double time) {                                                        //Method to move our robot in 8 axis of movement and compensate for any drift
         final double startHeading = heading();                                                              //Variable to stop constant update of heading
         double[][] speedArray = {                                                                           //All descriptions of speed set are based on when the REV expansion hub is facing you
                 {0.4, 0.4, -0.4, -0.4},                                                                     //Up        (0)
@@ -59,7 +59,7 @@ public abstract class Methods extends DefineHardware {
             }
         }
         allMotorPower(0);                                                                                   //Turns all motors off
-    }
+    }*/
 
     /*
      * The way this method works
@@ -67,7 +67,7 @@ public abstract class Methods extends DefineHardware {
      * Robot will turn (slowly) until it reaches the desired heading
      * If the robot's heading goes over that value it will compensate (not yet implemented)
      */
-    public void faceHeading(int dHeading) {                                                                 //Method to change our heading (turn) to a specific angle
+    /*public void faceHeading(int dHeading) {                                                                 //Method to change our heading (turn) to a specific angle
         final double startHeading = heading();                                                              //Variable to stop constant update of heading
         double turnAmount = dHeading - startHeading;
         if (turnAmount > 0) {
@@ -81,7 +81,7 @@ public abstract class Methods extends DefineHardware {
         } else {
         }
         allMotorPower(0);                                                                                   //Turns all motors off
-    }
+    }*/
 
     /*
      * This method is a replacement of the wait method

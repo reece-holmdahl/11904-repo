@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.DefineHardware;
+
 /**
  * This is the final holonomic TeleOp file that will be used at the tournament, it incorporates
  * some designs used in my TeleOp concepts but also uses more proven and effective ways.
@@ -16,22 +18,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name = "FinalHolonomic")
-public class FinalHolonomic extends OpMode {
-
-    //Link HardwareMap object
-    private HardwareMap hwMap   = null;
-
-    //Define drive train objects
-    private DcMotor frontLeft   = null;
-    private DcMotor backLeft    = null;
-    private DcMotor frontRight  = null;
-    private DcMotor backRight   = null;
-    private Servo jewel         = null;
-    private DcMotor[] drive     = {frontLeft, backLeft, frontRight, backRight};                             //DcMotor array for use in mapping or setting motor parameters
-
-    //Rename gamepads for easier use
-    private Gamepad driver      = gamepad1;
-    private Gamepad manipulator = gamepad2;
+public class FinalHolonomic extends DefineHardware {
 
     //Speed control coefficients
     private double speed    = 0.6;
@@ -42,25 +29,6 @@ public class FinalHolonomic extends OpMode {
     private int left    = 1;
     private int back    = -1;
     private int right   = -1;
-
-    /**
-     * The init method is run once when the init phase is active on the robot controller. This
-     * method is used for hardware mapping hardware devices and setting parameters for the devices.
-     */
-
-    public void init() {
-        //Hardware map drive train objects
-        frontLeft   = hwMap.get(DcMotor.class,  "front left");
-        backLeft    = hwMap.get(DcMotor.class,  "back left");
-        frontRight  = hwMap.get(DcMotor.class,  "front right");
-        backRight   = hwMap.get(DcMotor.class,  "back right");
-        jewel       = hwMap.get(Servo.class,    "jewel");
-
-        for (int i = 0; i < drive.length; i++) {
-            drive[i].setDirection(DcMotor.Direction.FORWARD);
-            //drive[i] = hwMap.get(DcMotor.class, drive[i].toString().toLowerCase());                         //Potential way to map an array of DcMotors
-        }
-    }
 
     /**
      * The loop method is looped when the robot controller is in the start phase. It is used for the
@@ -89,17 +57,6 @@ public class FinalHolonomic extends OpMode {
 
         //Keep jewel servo upright so it doesn't get broken off
         jewel.setPosition(0);
-    }
-
-    /**
-     * The stop method is ran once when the robot controller ends the op mode. It is usually used to
-     * turn off motors or other moving devices so the robot doesn't accidentally go haywire.
-     */
-
-    public void stop() {
-        for (int i = 0; i < drive.length; i++) {
-            drive[i].setPower(0);
-        }
     }
 
     /**

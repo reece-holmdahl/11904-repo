@@ -30,10 +30,10 @@ public class HolonomicChanges extends DefineHardware {
         backRight.setPower(holoCode(3));
 
         //Glyph manipulator motor and servo code
-        if (armMovable) {
+        /*if (armMovable) {
             lowerArm.setPower(Range.clip(manipLeftY() + forceMod(), -1, 1));
             upperArm.setPower(-lowerArm.getPower());
-        }
+        }*/
     }
 
     private double scaleDouble(double input, boolean precise) {
@@ -65,20 +65,6 @@ public class HolonomicChanges extends DefineHardware {
                 (-driveLeftX() + driveLeftY()) * speedMod - driveRightX() * turnMod,                        //Front right motor, or motor pos 2
                 (driveLeftX() + driveLeftY()) * speedMod - driveRightX() * turnMod};                        //Back right motor, pos motor pos 3
         return Range.clip(motorPower[motorPos], -1, 1);                                                     //Returns value for motor based on selection and makes sure it doesn't exceed motor power regulations
-    }
-
-    private int motorTick() {                                                                               //Motor tick variable to get relative place of lower arm motor (0)
-        tickValue += (int) ((lowerArm.getPower() - forceMod()) * 100);                                      //Subtract force modification and multiply by 100 for accurate representation when cast to an int
-        if (tickValue > 400) {                                                                              //Value cannot exceed 400 (subject to change)
-            tickValue = 400;
-            armMovable = false;                                                                             //Disallow movement of arm so tick value doesn't break (greater than 400)
-        } else if (tickValue < 0) {
-            tickValue = 0;
-            armMovable = false;                                                                             //Same as before except when it is below (lower than 0)
-        } else {
-            armMovable = true;
-        }
-        return tickValue;
     }
 
     private double forceMod() {                                                                             //Force modification method for adaptive adding to or subtracting from power of arm speed

@@ -10,17 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name = "Debugger")
-public class Debugger extends OpMode {
-
-    public void init() {
-
-    }
+public class Debugger extends DefineHardware {
 
     public void loop() {
-
-    }
-
-    public void stop() {
-
+        frontLeft.setPower(1);
+        backLeft.setPower(1);
+        frontRight.setPower(1);
+        backRight.setPower(1);
     }
 }
