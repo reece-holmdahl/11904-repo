@@ -54,10 +54,13 @@ public class FinalHolonomic extends OpMode {
         //slide   = hardwareMap.get(DcMotor.class,  "slide");
         //gripper = hardwareMap.get(Servo.class,    "gripper");
 
+        //Set direction of drive train motors
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+
+        //Set direction of linear slide motor
         //slide.setDirection(DcMotor.Direction.FORWARD);
     }
 
