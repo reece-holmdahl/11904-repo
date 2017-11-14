@@ -16,8 +16,11 @@ import com.qualcomm.robotcore.util.Range;
 public class FinalHolonomic extends OpMode {
 
     //Speed control coefficients
-    private double speed    = 0.4;
+    private double speed    = 0.6;
     private double turn     = 0.2;
+
+    //Servo claw variables
+    private double sPos = 0;
 
     //Variable names used for cleaner code
     private int front   = 1;
@@ -31,6 +34,11 @@ public class FinalHolonomic extends OpMode {
     private DcMotor frontRight  = null;
     private DcMotor backRight   = null;
     private Servo   jewel       = null;
+
+    //Define glyph manipulator objects
+    private DcMotor arm         = null;
+    private Servo   leftClaw    = null;
+    private Servo   rightClaw   = null;
 
     //Define relic manipulator objects
     private DcMotor slide   = null;
@@ -51,6 +59,11 @@ public class FinalHolonomic extends OpMode {
         jewel       = hardwareMap.get(Servo.class,    "jewel");
 
         //Hardware map relic manipulator objects
+        arm       = hardwareMap.get(DcMotor.class,    "arm");
+        leftClaw  = hardwareMap.get(Servo.class,      "leftClaw");
+        rightClaw = hardwareMap.get(Servo.class,      "rightClaw");
+
+        //Hardware map relic manipulator objects
         //slide   = hardwareMap.get(DcMotor.class,  "slide");
         //gripper = hardwareMap.get(Servo.class,    "gripper");
 
@@ -60,8 +73,27 @@ public class FinalHolonomic extends OpMode {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        //Set direction of linear slide motor
+        //Set motor parameters of linear slide motor
         //slide.setDirection(DcMotor.Direction.FORWARD);
+        //slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //Set motor parameters of arm motor
+        arm.setDirection(DcMotor.Direction.REVERSE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //Set servo parameters of jewel
+        jewel.scaleRange(0.5, 1.0);
+        jewel.setDirection(Servo.Direction.REVERSE);
+
+        //Set servo parameters of claws
+        leftClaw.setDirection(Servo.Direction.FORWARD);
+        leftClaw.scaleRange(0.3, 1.0);
+        rightClaw.setDirection(Servo.Direction.FORWARD);
+        rightClaw.scaleRange(0.3, 1.0);
+
+        //Set start position of servo claws
+        leftClaw.setPosition(0.3);
+        rightClaw.setPosition(0.3);
     }
 
     /**
@@ -106,6 +138,12 @@ public class FinalHolonomic extends OpMode {
 
         //Keep jewel servo upright so it doesn't get broken off
         jewel.setPosition(1.0);
+
+        //Use armCode method to set power to arm motor based so it isn't too fast
+        arm.setPower(armCode(manipulatorLeftY()));
+
+        //Use clawCode method to set position of claw and keep values within range
+        clawCode(leftClaw, rightClaw);
     }
 
     /**
@@ -114,17 +152,20 @@ public class FinalHolonomic extends OpMode {
      */
 
     public void stop() {
+
         //Stop motors
         frontLeft.setPower(0);
         backLeft.setPower(0);
         frontRight.setPower(0);
         backRight.setPower(0);
+        arm.setPower(0);
         //slide.setPower(0);
 
         //Reset servos
         jewel.setPosition(1);
+        leftClaw.setPosition(0.3);
+        rightClaw.setPosition(0.3);
         //gripper.setPosition(1);
-
     }
 
     /**
@@ -143,8 +184,47 @@ public class FinalHolonomic extends OpMode {
     }
 
     /**
+     * The armCode method uses simple math in order to not have the arm slam into the robot when it
+     * is set to go downwards
+     *
+     * @param joystick  The joystick values to multiply by and return
+     * @return          The adjusted power returned from the method
+     */
+
+    private double armCode(double joystick) {
+        double power;
+        if (joystick < 0) {
+            power = joystick / 5;
+        } else {
+            power = joystick / 2;
+        }
+        return power;
+    }
+
+    /**
+     * The clawCode method is a slightly different approach I wanted to try in order to control the
+     * claws. It directly sets the power to the servos supplied and manipulates a separate variable
+     *
+     * @param leftServo     The left servo you want to control
+     * @param rightServo    The right servo you want to control
+     */
+
+    private void clawCode(Servo leftServo, Servo rightServo) {
+        if (manipulatorLeftX() != 0 && sPos <= 1 && sPos >= 0) {
+            sPos += 0.1;
+        } else if (sPos > 1) {
+            sPos = 1;
+        } else if (sPos < 0) {
+            sPos = 0;
+        }
+        leftServo.setPosition(sPos);
+        rightServo.setPosition(sPos);
+    }
+
+    /**
      * The round method rounds the input to the place specified. Ex: tenths place is 0.1, hundredths
      * place is 0.01, etc.
+     *
      * @param input The double you want to round
      * @param place The decimal place it should be rounded to, any multiple of 10 works
      * @return      Returns the rounded value
@@ -166,4 +246,12 @@ public class FinalHolonomic extends OpMode {
     private double driverRightX() {
         return round(gamepad1.right_stick_x, 0.2);
     }
+
+    private double manipulatorLeftX() {
+        return round(gamepad2.left_stick_x, 0.05);
+    }
+
+    private double manipulatorLeftY() {
+            return round(gamepad2.left_stick_y, 0.05);
+        }
 }
