@@ -16,11 +16,21 @@ import com.qualcomm.robotcore.util.Range;
 public class FinalHolonomic extends OpMode {
 
     //Speed control coefficients
-    private double speed    = 0.6;
+    private double speed    = 0.4;
     private double turn     = 0.2;
 
     //Servo claw variables
-    private double sPos = 0;
+    private double leftClawPosition     = 0;
+    private double rightClawPosition    = 1;
+    private double clawSpeed            = 0.02;
+
+    //Relic clamp and pivot variables
+    private double clampPos = 0;
+    private double pivotPos = 0;
+
+    //Relic slide motor encoder value variables
+    private int slideEncMax = 0;
+    private int slideEncVal = 0;
 
     //Variable names used for cleaner code
     private int front   = 1;
@@ -41,8 +51,9 @@ public class FinalHolonomic extends OpMode {
     private Servo   rightClaw   = null;
 
     //Define relic manipulator objects
-    private DcMotor slide   = null;
-    private Servo   gripper = null;
+    private DcMotor slide = null;
+    private Servo   clamp = null;
+    private Servo   pivot = null;
 
     /**
      * The init method is run once when the init phase is active on the robot controller. This
@@ -64,8 +75,9 @@ public class FinalHolonomic extends OpMode {
         rightClaw = hardwareMap.get(Servo.class,      "rightClaw");
 
         //Hardware map relic manipulator objects
-        //slide   = hardwareMap.get(DcMotor.class,  "slide");
-        //gripper = hardwareMap.get(Servo.class,    "gripper");
+        slide = hardwareMap.get(DcMotor.class,  "slide");
+        clamp = hardwareMap.get(Servo.class,    "clamp");
+        pivot = hardwareMap.get(Servo.class,    "pivot");
 
         //Set direction of drive train motors
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -73,46 +85,82 @@ public class FinalHolonomic extends OpMode {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        //Set motor parameters of linear slide motor
-        //slide.setDirection(DcMotor.Direction.FORWARD);
-        //slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         //Set motor parameters of arm motor
         arm.setDirection(DcMotor.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        //Set motor parameters of linear slide motor
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setDirection(DcMotor.Direction.REVERSE);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         //Set servo parameters of jewel
-        jewel.scaleRange(0.5, 1.0);
-        jewel.setDirection(Servo.Direction.REVERSE);
+        //jewel.scaleRange(0.5, 1.0);
+        //jewel.setDirection(Servo.Direction.REVERSE);
 
         //Set servo parameters of claws
         leftClaw.setDirection(Servo.Direction.FORWARD);
-        leftClaw.scaleRange(0.3, 1.0);
         rightClaw.setDirection(Servo.Direction.FORWARD);
-        rightClaw.scaleRange(0.3, 1.0);
 
         //Set start position of servo claws
         leftClaw.setPosition(0.3);
-        rightClaw.setPosition(0.3);
+        rightClaw.setPosition(0.7);
     }
 
     /**
      * The loop method is looped when the robot controller is in the start phase. It is used for the
-     * core functionality of the robot like movement based on joysticks or other means.
+     * core functionality of the robot like movement with joysticks or other means.
      */
 
     public void loop() {
 
-        //Send motor speeds to telemetry
+        //Update left and right claw positions
+        leftClawPosition    +=  manipulatorRightX() * clawSpeed;
+        rightClawPosition   -=  manipulatorRightX() * clawSpeed;
+
+        //Check to see if leftClawPosition goes over 1 or under 0
+        if (leftClawPosition > 1)
+            leftClawPosition = 1;
+        if (leftClawPosition < 0)
+            leftClawPosition = 0;
+
+        //Check to see if rightClawPosition goes over 1 or under 0
+        if (rightClawPosition > 1)
+            rightClawPosition = 1;
+        if (rightClawPosition < 0)
+            rightClawPosition = 0;
+
+        //Update slide encoder value
+        slideEncVal = slide.getCurrentPosition();
+
+        //Send drive train motor speeds to telemetry
         telemetry.addData("Speed FL", Double.toString(frontLeft.getPower()));
         telemetry.addData("Speed BL", Double.toString(backLeft.getPower()));
         telemetry.addData("Speed FR", Double.toString(frontRight.getPower()));
         telemetry.addData("Speed BR", Double.toString(backRight.getPower()));
 
-        //Send joystick positions to telemetry
+        //Send gamepad1 joystick positions to telemetry
         telemetry.addData("Driver Left X", Double.toString(driverLeftX()));
         telemetry.addData("Driver Left Y", Double.toString(driverLeftY()));
         telemetry.addData("Driver Right X", Double.toString(driverRightX()));
+
+        //Send arm motor speed to telemetry
+        telemetry.addData("Speed Arm",  Double.toString(arm.getPower()));
+
+        //Send gamepad2 joystick positions to telemetry
+        telemetry.addData("Manipulator Left X", Double.toString(manipulatorLeftX()));
+        telemetry.addData("Manipulator Left Y", Double.toString(manipulatorLeftY()));
+
+        //Send glyph manipulator servo positions to telemetry
+        telemetry.addData("Left Claw Position",     Double.toString(leftClaw.getPosition()));
+        telemetry.addData("Right Claw Position",    Double.toString(rightClaw.getPosition()));
+
+        //Send slide encoder value to telemetry
+        telemetry.addData("Slide Encoder",  Integer.toString(slideEncVal));
+
+        //Send relic manipulator servo positions to telemetry
+        telemetry.addData("Clamp Position", Double.toString(clamp.getPosition()));
+        telemetry.addData("Pivot Position", Double.toString(pivot.getPosition()));
 
         //Update telemetry
         telemetry.update();
@@ -143,7 +191,8 @@ public class FinalHolonomic extends OpMode {
         arm.setPower(armCode(manipulatorLeftY()));
 
         //Use clawCode method to set position of claw and keep values within range
-        clawCode(leftClaw, rightClaw);
+        leftClaw.setPosition(leftClawPosition);
+        rightClaw.setPosition(rightClawPosition);
     }
 
     /**
@@ -159,13 +208,14 @@ public class FinalHolonomic extends OpMode {
         frontRight.setPower(0);
         backRight.setPower(0);
         arm.setPower(0);
-        //slide.setPower(0);
+        slide.setPower(0);
 
         //Reset servos
         jewel.setPosition(1);
         leftClaw.setPosition(0.3);
-        rightClaw.setPosition(0.3);
-        //gripper.setPosition(1);
+        rightClaw.setPosition(0.7);
+        //clamp.setPosition(0);
+        //pivot.setPosition(0);
     }
 
     /**
@@ -194,31 +244,11 @@ public class FinalHolonomic extends OpMode {
     private double armCode(double joystick) {
         double power;
         if (joystick < 0) {
-            power = joystick / 5;
+            power = joystick * 0.1;
         } else {
-            power = joystick / 2;
+            power = joystick * 0.5;
         }
         return power;
-    }
-
-    /**
-     * The clawCode method is a slightly different approach I wanted to try in order to control the
-     * claws. It directly sets the power to the servos supplied and manipulates a separate variable
-     *
-     * @param leftServo     The left servo you want to control
-     * @param rightServo    The right servo you want to control
-     */
-
-    private void clawCode(Servo leftServo, Servo rightServo) {
-        if (manipulatorLeftX() != 0 && sPos <= 1 && sPos >= 0) {
-            sPos += 0.1;
-        } else if (sPos > 1) {
-            sPos = 1;
-        } else if (sPos < 0) {
-            sPos = 0;
-        }
-        leftServo.setPosition(sPos);
-        rightServo.setPosition(sPos);
     }
 
     /**
@@ -253,5 +283,9 @@ public class FinalHolonomic extends OpMode {
 
     private double manipulatorLeftY() {
             return round(gamepad2.left_stick_y, 0.05);
+        }
+
+    private double manipulatorRightX() {
+            return round(gamepad2.right_stick_x, 0.01);
         }
 }
