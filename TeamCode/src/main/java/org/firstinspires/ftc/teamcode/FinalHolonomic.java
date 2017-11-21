@@ -326,8 +326,8 @@ public class FinalHolonomic extends OpMode {
 
         //Reset servos
         jewel.setPosition(1);
-        leftClaw.setPosition(0.3);
-        rightClaw.setPosition(0.7);
+        //leftClaw.setPosition(0.3);
+        //rightClaw.setPosition(0.7);
         //clamp.setPosition(0);
         //pivot.setPosition(0);
     }
