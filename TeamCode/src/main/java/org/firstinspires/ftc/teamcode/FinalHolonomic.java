@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,45 +17,73 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "FinalHolonomic")
 public class FinalHolonomic extends OpMode {
 
+    /* Power variables for hardware devices */
+    
+    //Drive train motor and servo variables
+    private double                      frontLeftPower  = 0;
+    private double                      backLeftPower   = 0;
+    private double                      frontRightPower = 0;
+    private double                      backRightPower  = 0;
+    private double                      jewelPos        = 1;
+    
+    //Glyph manipulator motor and servo variables
+    private double                      armPower        = 0;
+    private double                      leftClawPos     = 0;
+    private double                      rightClawPos    = 1;
+    
+    //Relic manipulator motor and servo variables
+    private double                      slidePower      = 0;
+    private int                         slideEncVal     = 0;
+    private int                         slideEncMax     = 0;
+    private double                      clampPos        = 0;
+    private double                      pivotPos        = 0;
+
+
+    /* Variable coefficients */
+
     //Speed control coefficients
-    private double speed    = 0.4;
-    private double turn     = 0.2;
+    private final double                driveSpd        = 0.4;
+    private final double                turnSpd         = 0.2;
+    private final double                servoSpd        = 0.02;
 
-    //Servo claw variables
-    private double leftClawPosition     = 0;
-    private double rightClawPosition    = 1;
-    private double clawSpeed            = 0.02;
+    //Drive train variables used for coefficients in driveCode methods
+    private final int                   front           =  1;
+    private final int                   back            = -1;
+    private final int                   left            = -1;
+    private final int                   right           =  1;
 
-    //Relic clamp and pivot variables
-    private double clampPos = 0;
-    private double pivotPos = 0;
 
-    //Relic slide motor encoder value variables
-    private int slideEncMax = 0;
-    private int slideEncVal = 0;
+    /* Define variables for hardware device parameters */
 
-    //Variable names used for cleaner code
-    private int front   = 1;
-    private int back    = -1;
-    private int left    = -1;
-    private int right   = 1;
+    //Variables for motor parameters
+    private final Direction             forward         = Direction.FORWARD;
+    private final Direction             reverse         = Direction.REVERSE;
+    private final ZeroPowerBehavior     brake           = ZeroPowerBehavior.BRAKE;
+    private final ZeroPowerBehavior     drift           = ZeroPowerBehavior.FLOAT;
 
-    //Define drive train objects
-    private DcMotor frontLeft   = null;
-    private DcMotor backLeft    = null;
-    private DcMotor frontRight  = null;
-    private DcMotor backRight   = null;
-    private Servo   jewel       = null;
+    //Variables for servo parameters
+    private final Servo.Direction       sForward        = Servo.Direction.FORWARD;
+    private final Servo.Direction       sReverse        = Servo.Direction.REVERSE;
 
-    //Define glyph manipulator objects
-    private DcMotor arm         = null;
-    private Servo   leftClaw    = null;
-    private Servo   rightClaw   = null;
 
-    //Define relic manipulator objects
-    private DcMotor slide = null;
-    private Servo   clamp = null;
-    private Servo   pivot = null;
+    /* Define hardware devices */
+
+    //Drive train objects
+    private DcMotor                     frontLeft       = null;
+    private DcMotor                     backLeft        = null;
+    private DcMotor                     frontRight      = null;
+    private DcMotor                     backRight       = null;
+    private Servo                       jewel           = null;
+
+    //Glyph manipulator objects
+    private DcMotor                     arm             = null;
+    private Servo                       leftClaw        = null;
+    private Servo                       rightClaw       = null;
+
+    //Relic manipulator objects
+    private DcMotor                     slide           = null;
+    private Servo                       clamp           = null;
+    private Servo                       pivot           = null;
 
     /**
      * The init method is run once when the init phase is active on the robot controller. This
@@ -62,49 +92,58 @@ public class FinalHolonomic extends OpMode {
 
     public void init() {
 
+        /* Hardware map all hardware devices */
+
         //Hardware map drive train objects
-        frontLeft   = hardwareMap.get(DcMotor.class,  "front left");
-        backLeft    = hardwareMap.get(DcMotor.class,  "back left");
-        frontRight  = hardwareMap.get(DcMotor.class,  "front right");
-        backRight   = hardwareMap.get(DcMotor.class,  "back right");
-        jewel       = hardwareMap.get(Servo.class,    "jewel");
+        frontLeft   = hardwareMap.get(DcMotor.class,    "front left");
+        backLeft    = hardwareMap.get(DcMotor.class,    "back left");
+        frontRight  = hardwareMap.get(DcMotor.class,    "front right");
+        backRight   = hardwareMap.get(DcMotor.class,    "back right");
+        jewel       = hardwareMap.get(Servo.class,      "jewel");
+
+        //Hardware map glyph manipulator objects
+        arm         = hardwareMap.get(DcMotor.class,    "arm");
+        leftClaw    = hardwareMap.get(Servo.class,      "leftClaw");
+        rightClaw   = hardwareMap.get(Servo.class,      "rightClaw");
 
         //Hardware map relic manipulator objects
-        arm       = hardwareMap.get(DcMotor.class,    "arm");
-        leftClaw  = hardwareMap.get(Servo.class,      "leftClaw");
-        rightClaw = hardwareMap.get(Servo.class,      "rightClaw");
+        slide       = hardwareMap.get(DcMotor.class,    "slide");
+        clamp       = hardwareMap.get(Servo.class,      "clamp");
+        pivot       = hardwareMap.get(Servo.class,      "pivot");
 
-        //Hardware map relic manipulator objects
-        slide = hardwareMap.get(DcMotor.class,  "slide");
-        clamp = hardwareMap.get(Servo.class,    "clamp");
-        pivot = hardwareMap.get(Servo.class,    "pivot");
 
-        //Set direction of drive train motors
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        /* Set parameters of all hardware devices */
 
-        //Set motor parameters of arm motor
-        arm.setDirection(DcMotor.Direction.REVERSE);
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //Drive train motor parameters
+        frontLeft.setDirection(forward);
+        backLeft.setDirection(forward);
+        frontRight.setDirection(forward);
+        backRight.setDirection(forward);
 
-        //Set motor parameters of linear slide motor
+        //Arm motor parameters
+        arm.setDirection(reverse);
+        arm.setZeroPowerBehavior(brake);
+
+        //Linear slide motor parameters
+        slide.setDirection(reverse);
+        slide.setZeroPowerBehavior(brake);
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setDirection(DcMotor.Direction.REVERSE);
-        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Set servo parameters of jewel
-        //jewel.scaleRange(0.5, 1.0);
-        //jewel.setDirection(Servo.Direction.REVERSE);
+        //Jewel servo parameters
+        jewel.setDirection(sReverse);
+        jewel.setPosition(jewelPos);
 
-        //Set servo parameters of claws
-        leftClaw.setDirection(Servo.Direction.FORWARD);
-        rightClaw.setDirection(Servo.Direction.FORWARD);
+        //Relic manipulator servo parameters
+        clamp.setDirection(sForward);
+        clamp.setPosition(clampPos);
+        pivot.setDirection(sForward);
+        pivot.setPosition(pivotPos);
 
-        //Set start position of servo claws
-        leftClaw.setPosition(0.3);
-        rightClaw.setPosition(0.7);
+        //Glyph manipulator servo parameters
+        leftClaw.setDirection(sForward);
+        leftClaw.setPosition(leftClawPos);
+        rightClaw.setDirection(sReverse);
+        rightClaw.setPosition(rightClawPos);
     }
 
     /**
@@ -114,85 +153,160 @@ public class FinalHolonomic extends OpMode {
 
     public void loop() {
 
-        //Update left and right claw positions
-        leftClawPosition    +=  manipulatorRightX() * clawSpeed;
-        rightClawPosition   -=  manipulatorRightX() * clawSpeed;
+        /* Set drive train motor power */
 
-        //Check to see if leftClawPosition goes over 1 or under 0
-        if (leftClawPosition > 1)
-            leftClawPosition = 1;
-        if (leftClawPosition < 0)
-            leftClawPosition = 0;
-
-        //Check to see if rightClawPosition goes over 1 or under 0
-        if (rightClawPosition > 1)
-            rightClawPosition = 1;
-        if (rightClawPosition < 0)
-            rightClawPosition = 0;
-
-        //Update slide encoder value
-        slideEncVal = slide.getCurrentPosition();
-
-        //Send drive train motor speeds to telemetry
-        telemetry.addData("Speed FL", Double.toString(frontLeft.getPower()));
-        telemetry.addData("Speed BL", Double.toString(backLeft.getPower()));
-        telemetry.addData("Speed FR", Double.toString(frontRight.getPower()));
-        telemetry.addData("Speed BR", Double.toString(backRight.getPower()));
-
-        //Send gamepad1 joystick positions to telemetry
-        telemetry.addData("Driver Left X", Double.toString(driverLeftX()));
-        telemetry.addData("Driver Left Y", Double.toString(driverLeftY()));
-        telemetry.addData("Driver Right X", Double.toString(driverRightX()));
-
-        //Send arm motor speed to telemetry
-        telemetry.addData("Speed Arm",  Double.toString(arm.getPower()));
-
-        //Send gamepad2 joystick positions to telemetry
-        telemetry.addData("Manipulator Left X", Double.toString(manipulatorLeftX()));
-        telemetry.addData("Manipulator Left Y", Double.toString(manipulatorLeftY()));
-
-        //Send glyph manipulator servo positions to telemetry
-        telemetry.addData("Left Claw Position",     Double.toString(leftClaw.getPosition()));
-        telemetry.addData("Right Claw Position",    Double.toString(rightClaw.getPosition()));
-
-        //Send slide encoder value to telemetry
-        telemetry.addData("Slide Encoder",  Integer.toString(slideEncVal));
-
-        //Send relic manipulator servo positions to telemetry
-        telemetry.addData("Clamp Position", Double.toString(clamp.getPosition()));
-        telemetry.addData("Pivot Position", Double.toString(pivot.getPosition()));
-
-        //Update telemetry
-        telemetry.update();
-
-        //Use driveCode method to set power to motors based on joystick values
-        frontLeft.setPower(driveCode(front, left));
-        backLeft.setPower(driveCode(back, left));
-        frontRight.setPower(driveCode(front, right));
-        backRight.setPower(driveCode(back, right));
+        //Update drive train motor powers with driveCode method and stop them from drifting
+        frontLeftPower  =   driveCode(front,    left);
+        backLeftPower   =   driveCode(back,     left);
+        frontRightPower =   driveCode(front,    right);
+        backRightPower  =   driveCode(back,     right);
 
         //Set wheels to brake when not being powered
         if (driverLeftX() + driverLeftY() == 0) {
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            frontLeft.setZeroPowerBehavior(brake);
+            backLeft.setZeroPowerBehavior(brake);
+            frontRight.setZeroPowerBehavior(brake);
+            backRight.setZeroPowerBehavior(brake);
         } else {
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            frontLeft.setZeroPowerBehavior(drift);
+            backLeft.setZeroPowerBehavior(drift);
+            frontRight.setZeroPowerBehavior(drift);
+            backRight.setZeroPowerBehavior(drift);
         }
 
-        //Keep jewel servo upright so it doesn't get broken off
-        jewel.setPosition(1.0);
 
-        //Use armCode method to set power to arm motor based so it isn't too fast
-        arm.setPower(armCode(manipulatorLeftY()));
+        /* Set arm motor power */
 
-        //Use clawCode method to set position of claw and keep values within range
-        leftClaw.setPosition(leftClawPosition);
-        rightClaw.setPosition(rightClawPosition);
+        //Update arm power variable using dpad up and down
+        if (gamepad1.dpad_up) {
+            armPower    =   0.6;
+        } else if (gamepad1.dpad_down) {
+            armPower    =  -0.01;
+        } else {
+            armPower    =   0;
+        }
+
+
+        /* Set linear slide motor power */
+
+        //Update linear slide power variable using dpad left and dpad right
+        if (gamepad1.dpad_right) {
+            slidePower  =   1;
+        } else if (gamepad1.dpad_left) {
+            slidePower  =  -0.4;
+        } else {
+            slidePower  =   0;
+        }
+
+
+        /* Jewel servo position */
+
+        //Keep jewel servo position at 1 the whole match so it doesn't fall over
+        jewel.setPosition(jewelPos);
+
+
+        /* Glyph manipulator servo positions */
+
+        //Update left and right claw positions
+        if (gamepad1.left_bumper) {
+            if (leftClawPos <= 1 && leftClawPos >= 0 && rightClawPos <= 1 && rightClawPos >= 0) {
+                leftClawPos     +=  servoSpd;
+                rightClawPos    -=  servoSpd;
+            }
+        } else if (gamepad1.right_bumper) {
+            if (leftClawPos <= 1 && leftClawPos >= 0 && rightClawPos <= 1 && rightClawPos >= 0) {
+                leftClawPos     -=  servoSpd;
+                rightClawPos    +=  servoSpd;
+            }
+        }
+
+        //Keep left and right claw positions within 0 and 1
+        if (leftClawPos > 1 || rightClawPos < 0) {
+            leftClawPos         =   1;
+            rightClawPos        =   0;
+        } else if (leftClawPos < 0 || rightClawPos > 1) {
+            leftClawPos         =   0;
+            rightClawPos        =   1;
+        }
+
+
+        /* Relic manipulator servo positions */
+
+        //Update clamp position
+        if (gamepad1.a) {
+            if (clampPos <= 1 && clampPos >= 0) {
+                clampPos        +=  servoSpd;
+            }
+        } else if (gamepad1.b) {
+            if (clampPos <= 1 && clampPos >= 0) {
+                clampPos        -=  servoSpd;
+            }
+        }
+
+        //Keep left and right claw positions within 0 and 1
+        if (clampPos > 1) {
+            clampPos            =   1;
+        } else if (clampPos < 0) {
+            clampPos            =   0;
+        }
+
+
+        /* Power or set position to all hardware devices */
+
+        //Set power to drive train motors
+        frontLeft.setPower(frontLeftPower);
+        backLeft.setPower(backLeftPower);
+        frontRight.setPower(frontRightPower);
+        backRight.setPower(backRightPower);
+
+        //Set power to arm motor
+        arm.setPower(armPower);
+
+        //Set power to slide motor and get encoder value
+        slide.setPower(slidePower);
+        slideEncVal = slide.getCurrentPosition();
+
+        //Set position of glyph manipulator servos
+        leftClaw.setPosition(leftClawPos);
+        rightClaw.setPosition(rightClawPos);
+
+        //Set position of relic manipulator servos
+        clamp.setPosition(clampPos);
+        pivot.setPosition(pivotPos);
+
+        //Set position of jewel servo
+        jewel.setPosition(jewelPos);
+
+
+        /* Send out and update telemetry for debugging */
+
+        //Joystick data telemetry
+        telemetry.addData("Left X", Double.toString(driverLeftX()));
+        telemetry.addData("Left Y", Double.toString(driverLeftY()));
+        telemetry.addData("Right X", Double.toString(driverRightX()));
+
+        //Drive train motor telemetry
+        telemetry.addData("Speed: FL", Double.toString(frontLeftPower));
+        telemetry.addData("Speed: BL", Double.toString(backLeftPower));
+        telemetry.addData("Speed: FR", Double.toString(frontRightPower));
+        telemetry.addData("Speed: BR", Double.toString(backRightPower));
+
+        //Arm motor telemetry
+        telemetry.addData("Speed: Arm",  Double.toString(armPower));
+
+        //Linear slide motor telemetry
+        telemetry.addData("Enc: Slide",  Integer.toString(slideEncVal));
+
+        //Glyph manipulator servo telemetry
+        telemetry.addData("Pos: Left Claw",     Double.toString(leftClawPos));
+        telemetry.addData("Pos: Right Claw",    Double.toString(rightClawPos));
+
+        //Relic manipulator servo telemetry
+        telemetry.addData("Pos: Clamp", Double.toString(clampPos));
+        telemetry.addData("Pos: Pivot", Double.toString(pivotPos));
+
+        //Update telemetry
+        telemetry.update();
     }
 
     /**
@@ -222,15 +336,15 @@ public class FinalHolonomic extends OpMode {
      * The driveCode method calculates what motors need to be set to what power by giving it which
      * side and end the motor is on
      *
-     * @param side  The side (horizontally) that the motor is on
-     * @param end   The end (vertically) that the motor is on
+     * @param end   The end (vertically) that the motor is on. Ex: front, back
+     * @param side  The side (horizontally) that the motor is on. Ex: left, right
      * @return      Returns the power at which the motor needs to be set
      */
 
-    private double driveCode(int side, int end) {
+    private double driveCode(int end, int side) {
         double move = side * driverLeftX() + end * driverLeftY();
         double turn = driverRightX();
-        return Range.clip(move * speed + turn * this.turn, -1, 1);
+        return Range.clip(move * driveSpd + turn * turnSpd, -1, 1);
     }
 
     /**
@@ -276,16 +390,4 @@ public class FinalHolonomic extends OpMode {
     private double driverRightX() {
         return round(gamepad1.right_stick_x, 0.2);
     }
-
-    private double manipulatorLeftX() {
-        return round(gamepad2.left_stick_x, 0.05);
-    }
-
-    private double manipulatorLeftY() {
-            return round(gamepad2.left_stick_y, 0.05);
-        }
-
-    private double manipulatorRightX() {
-            return round(gamepad2.right_stick_x, 0.01);
-        }
 }
