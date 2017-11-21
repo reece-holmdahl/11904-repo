@@ -243,11 +243,29 @@ public class FinalHolonomic extends OpMode {
             }
         }
 
-        //Keep left and right claw positions within 0 and 1
+        //Keep clamp position within 0 and 1
         if (clampPos > 1) {
             clampPos            =   1;
         } else if (clampPos < 0) {
             clampPos            =   0;
+        }
+
+        //Update pivot position
+        if (gamepad1.left_trigger != 0) {
+            if (pivotPos <= 1 && pivotPos >= 0) {
+                pivotPos        +=  servoSpd;
+            }
+        } else if (gamepad1.right_trigger != 0) {
+            if (pivotPos <= 1 && pivotPos >= 0) {
+                pivotPos        -=  servoSpd;
+            }
+        }
+
+        //Keep pivot position within 0 and 1
+        if (pivotPos > 1) {
+            pivotPos            =   1;
+        } else if (pivotPos < 0) {
+            pivotPos            =   0;
         }
 
 
