@@ -24,7 +24,7 @@ public class FinalHolonomic extends OpMode {
     private double                      backLeftPower   = 0;
     private double                      frontRightPower = 0;
     private double                      backRightPower  = 0;
-    private double                      jewelPos        = 1;
+    private double                      jewelPos        = 0;
     
     //Glyph manipulator motor and servo variables
     private double                      armPower        = 0;
@@ -142,7 +142,7 @@ public class FinalHolonomic extends OpMode {
         //Glyph manipulator servo parameters
         leftClaw.setDirection(sForward);
         leftClaw.setPosition(leftClawPos);
-        rightClaw.setDirection(sReverse);
+        rightClaw.setDirection(sForward);
         rightClaw.setPosition(rightClawPos);
     }
 
@@ -179,9 +179,9 @@ public class FinalHolonomic extends OpMode {
 
         //Update arm power variable using dpad up and down
         if (gamepad1.dpad_up) {
-            armPower    =   0.6;
+            armPower    =   0.3;
         } else if (gamepad1.dpad_down) {
-            armPower    =  -0.01;
+            armPower    =  -0.075;
         } else {
             armPower    =   0;
         }
@@ -360,27 +360,9 @@ public class FinalHolonomic extends OpMode {
      */
 
     private double driveCode(int end, int side) {
-        double move = side * driverLeftX() + end * driverLeftY();
+        double move = end * driverLeftX() + side * driverLeftY();
         double turn = driverRightX();
         return Range.clip(move * driveSpd + turn * turnSpd, -1, 1);
-    }
-
-    /**
-     * The armCode method uses simple math in order to not have the arm slam into the robot when it
-     * is set to go downwards
-     *
-     * @param joystick  The joystick values to multiply by and return
-     * @return          The adjusted power returned from the method
-     */
-
-    private double armCode(double joystick) {
-        double power;
-        if (joystick < 0) {
-            power = joystick * 0.1;
-        } else {
-            power = joystick * 0.5;
-        }
-        return power;
     }
 
     /**
