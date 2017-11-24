@@ -42,9 +42,9 @@ public class FinalHolonomic extends OpMode {
     /* Variable coefficients */
 
     //Speed control coefficients
-    private final double                driveSpd        = 0.4;
+    private final double                driveSpd        = 0.75;
     private final double                turnSpd         = 0.2;
-    private final double                servoSpd        = 0.02;
+    private final double                servoSpd        = 0.03;
 
     //Drive train variables used for coefficients in driveCode methods
     private final int                   front           =  1;
@@ -179,9 +179,9 @@ public class FinalHolonomic extends OpMode {
 
         //Update arm power variable using dpad up and down
         if (gamepad1.dpad_up) {
-            armPower    =   0.3;
+            armPower    =   0.5;
         } else if (gamepad1.dpad_down) {
-            armPower    =  -0.075;
+            armPower    =  -0.3;
         } else {
             armPower    =   0;
         }
@@ -193,7 +193,7 @@ public class FinalHolonomic extends OpMode {
         if (gamepad1.dpad_right) {
             slidePower  =   1;
         } else if (gamepad1.dpad_left) {
-            slidePower  =  -0.4;
+            slidePower  =  -0.5;
         } else {
             slidePower  =   0;
         }
