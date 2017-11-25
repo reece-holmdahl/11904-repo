@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "Debugger")
+//@TeleOp(name = "Debugger")
 public class Debugger extends OpMode {
 
     //Speed to run motors at

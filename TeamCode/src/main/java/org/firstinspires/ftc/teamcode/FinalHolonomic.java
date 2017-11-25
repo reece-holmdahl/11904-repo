@@ -189,10 +189,10 @@ public class FinalHolonomic extends OpMode {
 
         /* Set linear slide motor power */
 
-        //Update linear slide power variable using dpad left and dpad right
-        if (gamepad1.dpad_right) {
+        //Update linear slide power variable using left and right trigger
+        if (gamepad1.right_trigger != 0) {
             slidePower  =   1;
-        } else if (gamepad1.dpad_left) {
+        } else if (gamepad1.left_trigger != 0) {
             slidePower  =  -0.5;
         } else {
             slidePower  =   0;
@@ -251,11 +251,11 @@ public class FinalHolonomic extends OpMode {
         }
 
         //Update pivot position
-        if (gamepad1.left_trigger != 0) {
+        if (gamepad1.dpad_left) {
             if (pivotPos <= 1 && pivotPos >= 0) {
                 pivotPos        +=  servoSpd;
             }
-        } else if (gamepad1.right_trigger != 0) {
+        } else if (gamepad1.dpad_right) {
             if (pivotPos <= 1 && pivotPos >= 0) {
                 pivotPos        -=  servoSpd;
             }
@@ -299,29 +299,30 @@ public class FinalHolonomic extends OpMode {
         /* Send out and update telemetry for debugging */
 
         //Joystick data telemetry
-        telemetry.addData("Left X", Double.toString(driverLeftX()));
-        telemetry.addData("Left Y", Double.toString(driverLeftY()));
-        telemetry.addData("Right X", Double.toString(driverRightX()));
+        telemetry.addData("Left X",             Double.toString(driverLeftX()));
+        telemetry.addData("Left Y",             Double.toString(driverLeftY()));
+        telemetry.addData("Right X",            Double.toString(driverRightX()));
 
         //Drive train motor telemetry
-        telemetry.addData("Speed: FL", Double.toString(frontLeftPower));
-        telemetry.addData("Speed: BL", Double.toString(backLeftPower));
-        telemetry.addData("Speed: FR", Double.toString(frontRightPower));
-        telemetry.addData("Speed: BR", Double.toString(backRightPower));
+        telemetry.addData("Speed: FL",          Double.toString(frontLeftPower));
+        telemetry.addData("Speed: BL",          Double.toString(backLeftPower));
+        telemetry.addData("Speed: FR",          Double.toString(frontRightPower));
+        telemetry.addData("Speed: BR",          Double.toString(backRightPower));
 
         //Arm motor telemetry
-        telemetry.addData("Speed: Arm",  Double.toString(armPower));
+        telemetry.addData("Speed: Arm",         Double.toString(armPower));
 
         //Linear slide motor telemetry
-        telemetry.addData("Enc: Slide",  Integer.toString(slideEncVal));
+        telemetry.addData("Speed: Slide",       Double.toString(slidePower));
+        telemetry.addData("Enc: Slide",         Integer.toString(slideEncVal));
 
         //Glyph manipulator servo telemetry
         telemetry.addData("Pos: Left Claw",     Double.toString(leftClawPos));
         telemetry.addData("Pos: Right Claw",    Double.toString(rightClawPos));
 
         //Relic manipulator servo telemetry
-        telemetry.addData("Pos: Clamp", Double.toString(clampPos));
-        telemetry.addData("Pos: Pivot", Double.toString(pivotPos));
+        telemetry.addData("Pos: Clamp",         Double.toString(clampPos));
+        telemetry.addData("Pos: Pivot",         Double.toString(pivotPos));
 
         //Update telemetry
         telemetry.update();
