@@ -28,7 +28,7 @@ public class FinalHolonomic extends OpMode {
     
     //Glyph manipulator motor and servo variables
     private double                      armPower        = 0;
-    private double                      leftClawPos     = 1;
+    private double                      leftClawPos     = 0;
     private double                      rightClawPos    = 1;
     
     //Relic manipulator motor and servo variables
@@ -141,8 +141,8 @@ public class FinalHolonomic extends OpMode {
         leftClaw.setDirection(sForward);
         leftClaw.scaleRange(0.15, 0.8);
         leftClaw.setPosition(leftClawPos);
-        rightClaw.setDirection(sReverse);
-        rightClaw.scaleRange(0.15, 0.8);
+        rightClaw.setDirection(sForward);
+        rightClaw.scaleRange(0.2, 0.85);
         rightClaw.setPosition(rightClawPos);
     }
 
@@ -191,7 +191,7 @@ public class FinalHolonomic extends OpMode {
 
         //Update linear slide power variable using left and right trigger
         if (gamepad1.dpad_right) {
-            slidePower  =   0.8;
+            slidePower  =   1;
         } else if (gamepad1.dpad_left) {
             slidePower  =  -0.35;
         } else {
@@ -211,12 +211,12 @@ public class FinalHolonomic extends OpMode {
         if (gamepad1.left_bumper) {
             if (leftClawPos <= 1 && leftClawPos >= 0 && rightClawPos <= 1 && rightClawPos >= 0) {
                 leftClawPos     +=  servoSpd;
-                rightClawPos    +=  servoSpd;
+                rightClawPos    -=  servoSpd;
             }
         } else if (gamepad1.right_bumper) {
             if (leftClawPos <= 1 && leftClawPos >= 0 && rightClawPos <= 1 && rightClawPos >= 0) {
                 leftClawPos     -=  servoSpd;
-                rightClawPos    -=  servoSpd;
+                rightClawPos    +=  servoSpd;
             }
         }
 
