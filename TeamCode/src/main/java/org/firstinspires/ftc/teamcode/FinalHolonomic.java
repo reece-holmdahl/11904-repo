@@ -28,13 +28,11 @@ public class FinalHolonomic extends OpMode {
     
     //Glyph manipulator motor and servo variables
     private double                      armPower        = 0;
-    private double                      leftClawPos     = 0;
+    private double                      leftClawPos     = 1;
     private double                      rightClawPos    = 1;
     
     //Relic manipulator motor and servo variables
     private double                      slidePower      = 0;
-    private int                         slideEncVal     = 0;
-    private int                         slideEncMax     = 0;
     private double                      clampPos        = 0;
     private double                      pivotPos        = 0;
 
@@ -42,8 +40,8 @@ public class FinalHolonomic extends OpMode {
     /* Variable coefficients */
 
     //Speed control coefficients
-    private final double                driveSpd        = 0.75;
-    private final double                turnSpd         = 0.3;
+    private final double                driveSpd        = 1;
+    private final double                turnSpd         = 0.4;
     private final double                servoSpd        = 0.025;
 
     //Drive train variables used for coefficients in driveCode methods
@@ -136,14 +134,14 @@ public class FinalHolonomic extends OpMode {
         clamp.setDirection(sReverse);
         clamp.scaleRange(0.45, 1);
         clamp.setPosition(clampPos);
-        pivot.setDirection(sForward);
+        pivot.setDirection(sReverse);
         pivot.setPosition(pivotPos);
 
         //Glyph manipulator servo parameters
         leftClaw.setDirection(sForward);
         leftClaw.scaleRange(0.15, 0.8);
         leftClaw.setPosition(leftClawPos);
-        rightClaw.setDirection(sForward);
+        rightClaw.setDirection(sReverse);
         rightClaw.scaleRange(0.15, 0.8);
         rightClaw.setPosition(rightClawPos);
     }
@@ -177,18 +175,6 @@ public class FinalHolonomic extends OpMode {
         }
 
 
-        /* Set linear slide motor power */
-
-        //Update linear slide power variable using left and right trigger
-        if (gamepad1.dpad_left) {
-            slidePower  =   0.8;
-        } else if (gamepad1.dpad_right) {
-            slidePower  =  -0.35;
-        } else {
-            slidePower  =   0;
-        }
-
-
         /* Set arm motor power */
 
         //Update arm power variable using dpad up and down
@@ -198,6 +184,18 @@ public class FinalHolonomic extends OpMode {
             armPower    =  -0.3;
         } else {
             armPower    =   0;
+        }
+
+
+        /* Set linear slide motor power */
+
+        //Update linear slide power variable using left and right trigger
+        if (gamepad1.dpad_right) {
+            slidePower  =   0.8;
+        } else if (gamepad1.dpad_left) {
+            slidePower  =  -0.35;
+        } else {
+            slidePower  =   0;
         }
 
 
@@ -213,12 +211,12 @@ public class FinalHolonomic extends OpMode {
         if (gamepad1.left_bumper) {
             if (leftClawPos <= 1 && leftClawPos >= 0 && rightClawPos <= 1 && rightClawPos >= 0) {
                 leftClawPos     +=  servoSpd;
-                rightClawPos    -=  servoSpd;
+                rightClawPos    +=  servoSpd;
             }
         } else if (gamepad1.right_bumper) {
             if (leftClawPos <= 1 && leftClawPos >= 0 && rightClawPos <= 1 && rightClawPos >= 0) {
                 leftClawPos     -=  servoSpd;
-                rightClawPos    +=  servoSpd;
+                rightClawPos    -=  servoSpd;
             }
         }
 
@@ -253,13 +251,13 @@ public class FinalHolonomic extends OpMode {
         }
 
         //Update pivot position
-        if (gamepad1.x) {
+        if (gamepad1.y) {
             if (pivotPos <= 1 && pivotPos >= 0) {
                 pivotPos        +=  servoSpd;
             }
-        } else if (gamepad1.y) {
+        } else if (gamepad1.x) {
             if (pivotPos <= 1 && pivotPos >= 0) {
-                pivotPos        -=  servoSpd;
+                pivotPos        -=  servoSpd * 0.5;
             }
         }
 
@@ -284,7 +282,6 @@ public class FinalHolonomic extends OpMode {
 
         //Set power to slide motor and get encoder value
         slide.setPower(slidePower);
-        slideEncVal = slide.getCurrentPosition();
 
         //Set position of glyph manipulator servos
         leftClaw.setPosition(leftClawPos);
@@ -316,7 +313,6 @@ public class FinalHolonomic extends OpMode {
 
         //Linear slide motor telemetry
         telemetry.addData("Speed: Slide",       Double.toString(slidePower));
-        telemetry.addData("Enc: Slide",         Integer.toString(slideEncVal));
 
         //Glyph manipulator servo telemetry
         telemetry.addData("Pos: Left Claw",     Double.toString(leftClawPos));
