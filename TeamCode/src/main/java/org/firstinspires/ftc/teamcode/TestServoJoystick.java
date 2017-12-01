@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class TestServoJoystick extends OpMode {
 
     Servo servo = null;
-    int sPos = 0;
+    double sPos = 0;
 
     public void init() {
         servo = hardwareMap.get(Servo.class, "servo");
