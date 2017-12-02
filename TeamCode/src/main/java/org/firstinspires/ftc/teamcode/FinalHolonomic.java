@@ -28,8 +28,8 @@ public class FinalHolonomic extends OpMode {
     
     //Glyph manipulator motor and servo variables
     private double                      armPower        = 0;
-    private double                      leftClawPos     = 0;
-    private double                      rightClawPos    = 1;
+    private double                      leftClawPos     = 1;
+    private double                      rightClawPos    = 0;
     
     //Relic manipulator motor and servo variables
     private double                      slidePower      = 0;
@@ -40,7 +40,7 @@ public class FinalHolonomic extends OpMode {
     /* Variable coefficients */
 
     //Speed control coefficients
-    private final double                driveSpd        = 1;
+    private final double                driveSpd        = 0.8;
     private final double                turnSpd         = 0.4;
     private final double                servoSpd        = 0.025;
 
@@ -132,7 +132,7 @@ public class FinalHolonomic extends OpMode {
 
         //Relic manipulator servo parameters
         clamp.setDirection(sReverse);
-        clamp.scaleRange(0.45, 1);
+        clamp.scaleRange(0.5, 1);
         clamp.setPosition(clampPos);
         pivot.setDirection(sReverse);
         pivot.setPosition(pivotPos);
@@ -181,7 +181,7 @@ public class FinalHolonomic extends OpMode {
         if (gamepad1.dpad_up) {
             armPower    =   0.5;
         } else if (gamepad1.dpad_down) {
-            armPower    =  -0.3;
+            armPower    =  -0.15;
         } else {
             armPower    =   0;
         }
@@ -191,7 +191,7 @@ public class FinalHolonomic extends OpMode {
 
         //Update linear slide power variable using left and right trigger
         if (gamepad1.dpad_right) {
-            slidePower  =   1;
+            slidePower  =   0.8;
         } else if (gamepad1.dpad_left) {
             slidePower  =  -0.35;
         } else {
@@ -235,11 +235,11 @@ public class FinalHolonomic extends OpMode {
         //Update clamp position
         if (gamepad1.a) {
             if (clampPos <= 1 && clampPos >= 0) {
-                clampPos        +=  servoSpd;
+                clampPos        +=  servoSpd * 0.5;
             }
         } else if (gamepad1.b) {
             if (clampPos <= 1 && clampPos >= 0) {
-                clampPos        -=  servoSpd;
+                clampPos        -=  servoSpd * 0.5;
             }
         }
 
@@ -253,11 +253,11 @@ public class FinalHolonomic extends OpMode {
         //Update pivot position
         if (gamepad1.y) {
             if (pivotPos <= 1 && pivotPos >= 0) {
-                pivotPos        +=  servoSpd;
+                pivotPos        +=  servoSpd * 0.4;
             }
         } else if (gamepad1.x) {
             if (pivotPos <= 1 && pivotPos >= 0) {
-                pivotPos        -=  servoSpd * 0.5;
+                pivotPos        -=  servoSpd * 0.15;
             }
         }
 
